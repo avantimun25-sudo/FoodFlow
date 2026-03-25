@@ -79,7 +79,7 @@ export default function Payments() {
                       <div className="text-xs text-muted-foreground">{payment.customerName} &bull; {payment.restaurantName}</div>
                     </TableCell>
                     <TableCell className="text-right font-bold text-foreground">
-                      ${payment.amount.toFixed(2)}
+                      ${Number(payment.amount).toFixed(2)}
                     </TableCell>
                     <TableCell>
                       <Badge variant="secondary" className="bg-white/5 uppercase border-white/10 text-xs">

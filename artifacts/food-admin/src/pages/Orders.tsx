@@ -147,7 +147,7 @@ export default function Orders() {
                     <TableCell className="text-muted-foreground text-sm">
                       {format(new Date(order.createdAt), "MMM d, h:mm a")}
                     </TableCell>
-                    <TableCell className="font-semibold">${order.totalAmount.toFixed(2)}</TableCell>
+                    <TableCell className="font-semibold">${Number(order.totalAmount).toFixed(2)}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className={`capitalize ${statusColors[order.status] || "bg-gray-500/10 text-gray-500"}`}>
                         {order.status.replace("_", " ")}

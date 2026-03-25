@@ -152,7 +152,7 @@ export default function Drivers() {
                     </TableCell>
                     <TableCell className="text-right font-medium">{d.totalDeliveries}</TableCell>
                     <TableCell className="text-right font-bold text-primary">
-                      ${d.totalEarnings.toFixed(2)}
+                      ${Number(d.totalEarnings).toFixed(2)}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">

@@ -142,7 +142,7 @@ export default function Customers() {
                     </TableCell>
                     <TableCell className="text-right font-medium">{c.totalOrders}</TableCell>
                     <TableCell className="text-right font-bold text-primary">
-                      ${c.totalSpent.toFixed(2)}
+                      ${Number(c.totalSpent).toFixed(2)}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">

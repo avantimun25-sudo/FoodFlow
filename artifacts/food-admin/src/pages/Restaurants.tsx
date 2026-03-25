@@ -139,11 +139,11 @@ export default function Restaurants() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1 font-medium">
-                        {r.rating?.toFixed(1) || "N/A"} <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
+                        {r.rating ? Number(r.rating).toFixed(1) : "N/A"} <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
                       </div>
                     </TableCell>
                     <TableCell className="text-right font-bold text-primary">
-                      ${r.totalRevenue.toFixed(2)}
+                      ${Number(r.totalRevenue).toFixed(2)}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
