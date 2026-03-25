@@ -13,6 +13,7 @@ export interface MenuItem {
   description?: string | null;
   price: number;
   category?: string | null;
+  imageUrl?: string | null;
   isAvailable: boolean;
   restaurantName: string;
 }

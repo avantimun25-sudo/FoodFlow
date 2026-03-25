@@ -48,6 +48,24 @@ Every package extends `tsconfig.base.json` which sets `composite: true`. The roo
 - `pnpm run build` — runs `typecheck` first, then recursively runs `build` in all packages that define it
 - `pnpm run typecheck` — runs `tsc --build --emitDeclarationOnly` using project references
 
+## Features
+
+### Admin Portal
+- **Authentication**: JWT-based login (`admin@foodadmin.com` / `admin123`). Redirects to admin dashboard.
+- **Restaurant Requests**: Admin reviews, approves, or declines restaurant registration requests. Approving creates a restaurant + portal user automatically.
+- **Restaurants, Orders, Customers, Drivers, Menu Items, Payments**: Full management pages.
+
+### Restaurant Portal
+- **Registration**: Public registration form at `/register`. Submits a request with restaurant name, cuisine, address, owner info, and password. Admin must approve.
+- **Authentication**: Same login page at `/login`. Redirects to `/restaurant/dashboard` after login.
+- **Dashboard**: Revenue stats, order counts, customer counts, menu item counts, active orders, and 30-day revenue trend chart.
+- **Orders**: Filter by status (pending, confirmed, preparing, out_for_delivery, delivered, cancelled).
+- **Customers**: Shows all customers who ordered from the restaurant with spend and order count.
+- **Menu Management**: Add/edit/delete menu items with image URL, category (shown as emoji), price, description. Toggle availability.
+
+### Data Flow
+- Restaurant registers → Admin reviews in "Restaurant Requests" → Admin approves → Restaurant user account + restaurant record created → Restaurant owner can log in to their portal → Portal data (orders, customers, menu) is scoped to their restaurant ID.
+
 ## Packages
 
 ### `artifacts/api-server` (`@workspace/api-server`)

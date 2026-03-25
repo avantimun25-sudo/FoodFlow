@@ -6,11 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface UpdateMenuItemRequest {
-  name?: string;
+export interface CreateRestaurantMenuItemRequest {
+  name: string;
   description?: string;
-  price?: number;
+  price: number;
   category?: string;
   imageUrl?: string;
-  isAvailable?: boolean;
 }

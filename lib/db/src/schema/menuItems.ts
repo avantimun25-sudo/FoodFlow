@@ -9,6 +9,7 @@ export const menuItemsTable = pgTable("menu_items", {
   description: text("description"),
   price: numeric("price", { precision: 10, scale: 2 }).notNull(),
   category: text("category"),
+  imageUrl: text("image_url"),
   isAvailable: boolean("is_available").notNull().default(true),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),

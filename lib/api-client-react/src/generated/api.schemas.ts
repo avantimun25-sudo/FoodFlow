@@ -248,6 +248,7 @@ export interface MenuItem {
   description?: string | null;
   price: number;
   category?: string | null;
+  imageUrl?: string | null;
   isAvailable: boolean;
   restaurantName: string;
 }
@@ -258,6 +259,7 @@ export interface CreateMenuItemRequest {
   description?: string;
   price: number;
   category?: string;
+  imageUrl?: string;
 }
 
 export interface UpdateMenuItemRequest {
@@ -265,6 +267,24 @@ export interface UpdateMenuItemRequest {
   description?: string;
   price?: number;
   category?: string;
+  imageUrl?: string;
+  isAvailable?: boolean;
+}
+
+export interface CreateRestaurantMenuItemRequest {
+  name: string;
+  description?: string;
+  price: number;
+  category?: string;
+  imageUrl?: string;
+}
+
+export interface UpdateRestaurantMenuItemRequest {
+  name?: string;
+  description?: string;
+  price?: number;
+  category?: string;
+  imageUrl?: string;
   isAvailable?: boolean;
 }
 

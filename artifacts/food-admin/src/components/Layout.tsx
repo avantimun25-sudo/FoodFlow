@@ -1,17 +1,19 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { 
-  LayoutDashboard, 
-  ShoppingBag, 
-  Users, 
-  Store, 
-  Car, 
-  UtensilsCrossed, 
+import {
+  LayoutDashboard,
+  ShoppingBag,
+  Users,
+  Store,
+  Car,
+  UtensilsCrossed,
   CreditCard,
   LogOut,
-  Bell
+  Bell,
+  ClipboardList,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface LayoutProps {
   children: ReactNode;
@@ -19,21 +21,27 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [location] = useLocation();
+  const { user, logout } = useAuth();
 
   const navItems = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
     { href: "/orders", label: "Orders", icon: ShoppingBag },
     { href: "/customers", label: "Customers", icon: Users },
     { href: "/restaurants", label: "Restaurants", icon: Store },
+    { href: "/restaurant-requests", label: "Restaurant Requests", icon: ClipboardList },
     { href: "/drivers", label: "Drivers", icon: Car },
     { href: "/menu-items", label: "Menu Items", icon: UtensilsCrossed },
     { href: "/payments", label: "Payments", icon: CreditCard },
   ];
 
+  const initials = user?.email?.slice(0, 2).toUpperCase() ?? "AD";
+
+  const pageTitle =
+    navItems.find((i) => i.href === location)?.label ??
+    (location === "/" ? "Dashboard" : "Page");
+
   return (
     <div className="flex min-h-screen w-full bg-background overflow-hidden selection:bg-primary/30">
-      
-      {/* Sidebar */}
       <aside className="w-72 hidden md:flex flex-col border-r border-white/5 bg-card/50 backdrop-blur-xl relative z-10">
         <div className="h-20 flex items-center px-8 border-b border-white/5">
           <div className="flex items-center gap-3">
@@ -53,13 +61,13 @@ export default function Layout({ children }: LayoutProps) {
           {navItems.map((item) => {
             const isActive = location === item.href;
             return (
-              <Link 
-                key={item.href} 
+              <Link
+                key={item.href}
                 href={item.href}
                 className={`
                   flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group
-                  ${isActive 
-                    ? "bg-primary/10 text-primary font-semibold shadow-inner border border-primary/20" 
+                  ${isActive
+                    ? "bg-primary/10 text-primary font-semibold shadow-inner border border-primary/20"
                     : "text-muted-foreground hover:bg-white/5 hover:text-foreground font-medium"}
                 `}
               >
@@ -72,31 +80,33 @@ export default function Layout({ children }: LayoutProps) {
 
         <div className="p-4 border-t border-white/5">
           <div className="bg-white/5 rounded-2xl p-4 flex items-center gap-3 border border-white/5">
-            <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center">
-              <span className="font-bold text-secondary text-sm">AD</span>
+            <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0">
+              <span className="font-bold text-secondary text-sm">{initials}</span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-foreground truncate">Admin User</p>
-              <p className="text-xs text-muted-foreground truncate">admin@foodapp.com</p>
+              <p className="text-sm font-semibold text-foreground truncate">Admin</p>
+              <p className="text-xs text-muted-foreground truncate">{user?.email ?? ""}</p>
             </div>
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:text-destructive"
+              onClick={logout}
+              title="Sign out"
+            >
               <LogOut className="w-4 h-4" />
             </Button>
           </div>
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 relative">
-        {/* Subtle background glow effect */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[128px] pointer-events-none" />
         <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-secondary/10 rounded-full blur-[128px] pointer-events-none" />
 
         <header className="h-20 flex items-center justify-between px-8 border-b border-white/5 bg-background/80 backdrop-blur-md sticky top-0 z-20">
           <div>
-            <h2 className="text-xl font-display font-bold text-foreground">
-              {navItems.find(i => i.href === location)?.label || "Dashboard"}
-            </h2>
+            <h2 className="text-xl font-display font-bold text-foreground">{pageTitle}</h2>
           </div>
           <div className="flex items-center gap-4">
             <Button variant="outline" size="icon" className="rounded-full bg-card border-white/10 relative">

@@ -472,6 +472,7 @@ export const ListMenuItemsResponse = zod.object({
       description: zod.string().nullish(),
       price: zod.number(),
       category: zod.string().nullish(),
+      imageUrl: zod.string().nullish(),
       isAvailable: zod.boolean(),
       restaurantName: zod.string(),
     }),
@@ -487,6 +488,7 @@ export const CreateMenuItemBody = zod.object({
   description: zod.string().optional(),
   price: zod.number(),
   category: zod.string().optional(),
+  imageUrl: zod.string().optional(),
 });
 
 export const UpdateMenuItemParams = zod.object({
@@ -498,6 +500,7 @@ export const UpdateMenuItemBody = zod.object({
   description: zod.string().optional(),
   price: zod.number().optional(),
   category: zod.string().optional(),
+  imageUrl: zod.string().optional(),
   isAvailable: zod.boolean().optional(),
 });
 
@@ -508,6 +511,7 @@ export const UpdateMenuItemResponse = zod.object({
   description: zod.string().nullish(),
   price: zod.number(),
   category: zod.string().nullish(),
+  imageUrl: zod.string().nullish(),
   isAvailable: zod.boolean(),
   restaurantName: zod.string(),
 });
@@ -734,6 +738,7 @@ export const ListRestaurantMenuResponse = zod.object({
       description: zod.string().nullish(),
       price: zod.number(),
       category: zod.string().nullish(),
+      imageUrl: zod.string().nullish(),
       isAvailable: zod.boolean(),
       restaurantName: zod.string(),
     }),
@@ -741,6 +746,52 @@ export const ListRestaurantMenuResponse = zod.object({
   total: zod.number(),
   page: zod.number(),
   limit: zod.number(),
+});
+
+/**
+ * @summary Add a menu item to own restaurant
+ */
+export const CreateRestaurantMenuItemBody = zod.object({
+  name: zod.string(),
+  description: zod.string().optional(),
+  price: zod.number(),
+  category: zod.string().optional(),
+  imageUrl: zod.string().optional(),
+});
+
+/**
+ * @summary Update a menu item (own restaurant only)
+ */
+export const UpdateRestaurantMenuItemParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateRestaurantMenuItemBody = zod.object({
+  name: zod.string().optional(),
+  description: zod.string().optional(),
+  price: zod.number().optional(),
+  category: zod.string().optional(),
+  imageUrl: zod.string().optional(),
+  isAvailable: zod.boolean().optional(),
+});
+
+export const UpdateRestaurantMenuItemResponse = zod.object({
+  id: zod.number(),
+  restaurantId: zod.number(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  price: zod.number(),
+  category: zod.string().nullish(),
+  imageUrl: zod.string().nullish(),
+  isAvailable: zod.boolean(),
+  restaurantName: zod.string(),
+});
+
+/**
+ * @summary Delete a menu item (own restaurant only)
+ */
+export const DeleteRestaurantMenuItemParams = zod.object({
+  id: zod.coerce.number(),
 });
 
 /**

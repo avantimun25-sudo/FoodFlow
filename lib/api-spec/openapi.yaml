@@ -752,6 +752,59 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MenuItemListResponse"
+    post:
+      operationId: createRestaurantMenuItem
+      tags: [restaurant-portal]
+      summary: Add a menu item to own restaurant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRestaurantMenuItemRequest"
+      responses:
+        "201":
+          description: Created menu item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MenuItem"
+
+  /restaurant/menu/{id}:
+    patch:
+      operationId: updateRestaurantMenuItem
+      tags: [restaurant-portal]
+      summary: Update a menu item (own restaurant only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRestaurantMenuItemRequest"
+      responses:
+        "200":
+          description: Updated menu item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MenuItem"
+    delete:
+      operationId: deleteRestaurantMenuItem
+      tags: [restaurant-portal]
+      summary: Delete a menu item (own restaurant only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: Deleted
 
   /restaurant/revenue-trend:
     get:
@@ -1090,6 +1143,7 @@ components:
         description: { type: string, nullable: true }
         price: { type: number }
         category: { type: string, nullable: true }
+        imageUrl: { type: string, nullable: true }
         isAvailable: { type: boolean }
         restaurantName: { type: string }
       required: [id, restaurantId, name, price, isAvailable, restaurantName]
@@ -1102,6 +1156,7 @@ components:
         description: { type: string }
         price: { type: number }
         category: { type: string }
+        imageUrl: { type: string }
       required: [restaurantId, name, price]
 
     UpdateMenuItemRequest:
@@ -1111,6 +1166,27 @@ components:
         description: { type: string }
         price: { type: number }
         category: { type: string }
+        imageUrl: { type: string }
+        isAvailable: { type: boolean }
+
+    CreateRestaurantMenuItemRequest:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string }
+        price: { type: number }
+        category: { type: string }
+        imageUrl: { type: string }
+      required: [name, price]
+
+    UpdateRestaurantMenuItemRequest:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string }
+        price: { type: number }
+        category: { type: string }
+        imageUrl: { type: string }
         isAvailable: { type: boolean }
 
     MenuItemListResponse:

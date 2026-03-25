@@ -12,4 +12,5 @@ export interface CreateMenuItemRequest {
   description?: string;
   price: number;
   category?: string;
+  imageUrl?: string;
 }

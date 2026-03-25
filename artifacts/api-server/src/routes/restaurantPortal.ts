@@ -227,6 +227,79 @@ router.get("/menu", async (req, res) => {
   }
 });
 
+router.post("/menu", async (req, res) => {
+  try {
+    const restaurantId = req.user!.restaurantId!;
+    const { name, description, price, category, imageUrl } = req.body;
+    if (!name || !price) {
+      res.status(400).json({ error: "Name and price are required" });
+      return;
+    }
+
+    const [restaurant] = await db.select({ name: restaurantsTable.name }).from(restaurantsTable).where(eq(restaurantsTable.id, restaurantId)).limit(1);
+
+    const [item] = await db.insert(menuItemsTable).values({
+      restaurantId, name, description: description || null, price: String(price), category: category || null, imageUrl: imageUrl || null,
+    }).returning();
+
+    res.status(201).json({ ...item, price: Number(item.price), restaurantName: restaurant?.name ?? "" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.patch("/menu/:id", async (req, res) => {
+  try {
+    const restaurantId = req.user!.restaurantId!;
+    const id = parseInt(req.params.id);
+
+    const [existing] = await db.select().from(menuItemsTable).where(eq(menuItemsTable.id, id)).limit(1);
+    if (!existing || existing.restaurantId !== restaurantId) {
+      res.status(404).json({ error: "Menu item not found" });
+      return;
+    }
+
+    const { name, description, price, category, isAvailable, imageUrl } = req.body;
+    const updateData: Record<string, unknown> = { updatedAt: new Date() };
+    if (name !== undefined) updateData.name = name;
+    if (description !== undefined) updateData.description = description;
+    if (price !== undefined) updateData.price = String(price);
+    if (category !== undefined) updateData.category = category;
+    if (isAvailable !== undefined) updateData.isAvailable = isAvailable;
+    if (imageUrl !== undefined) updateData.imageUrl = imageUrl || null;
+
+    await db.update(menuItemsTable).set(updateData).where(eq(menuItemsTable.id, id));
+
+    const [restaurant] = await db.select({ name: restaurantsTable.name }).from(restaurantsTable).where(eq(restaurantsTable.id, restaurantId)).limit(1);
+    const [updated] = await db.select().from(menuItemsTable).where(eq(menuItemsTable.id, id)).limit(1);
+
+    res.json({ ...updated, price: Number(updated.price), restaurantName: restaurant?.name ?? "" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.delete("/menu/:id", async (req, res) => {
+  try {
+    const restaurantId = req.user!.restaurantId!;
+    const id = parseInt(req.params.id);
+
+    const [existing] = await db.select({ id: menuItemsTable.id, restaurantId: menuItemsTable.restaurantId }).from(menuItemsTable).where(eq(menuItemsTable.id, id)).limit(1);
+    if (!existing || existing.restaurantId !== restaurantId) {
+      res.status(404).json({ error: "Menu item not found" });
+      return;
+    }
+
+    await db.delete(menuItemsTable).where(eq(menuItemsTable.id, id));
+    res.status(204).send();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 router.get("/revenue-trend", async (req, res) => {
   try {
     const restaurantId = req.user!.restaurantId!;
