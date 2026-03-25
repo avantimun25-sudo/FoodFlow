@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "3JdEI8WVtb8J8gJDNwpGx"
+uri = "file://restaurant-credentials.txt"
+type = "text"
+title = "Restaurant Credentials"
