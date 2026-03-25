@@ -142,7 +142,7 @@ export default function MenuItems() {
                       <Badge variant="secondary" className="bg-secondary/20 text-secondary border-none">{item.category}</Badge>
                     </TableCell>
                     <TableCell className="text-right font-bold text-primary">
-                      ${item.price.toFixed(2)}
+                      ${Number(item.price).toFixed(2)}
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline" className={item.isAvailable ? "bg-green-500/10 text-green-500 border-green-500/20" : "bg-red-500/10 text-red-500 border-red-500/20"}>
