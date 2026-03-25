@@ -2,27 +2,22 @@ openapi: 3.1.0
 info:
   title: Api
   version: 0.1.0
-  description: Food Delivery Admin Dashboard API
+  description: Food Delivery Admin & Restaurant Portal API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: auth
   - name: dashboard
-    description: Dashboard analytics
   - name: orders
-    description: Order management
   - name: customers
-    description: Customer management
   - name: restaurants
-    description: Restaurant management
   - name: drivers
-    description: Driver management
   - name: menu-items
-    description: Menu item management
   - name: payments
-    description: Payment records
+  - name: restaurant-requests
+  - name: restaurant-portal
 
 paths:
   /healthz:
@@ -37,6 +32,55 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Auth token + user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                required: [ok]
 
   /dashboard/stats:
     get:
@@ -115,26 +159,19 @@ paths:
     get:
       operationId: listOrders
       tags: [orders]
-      summary: List all orders
       parameters:
         - name: page
           in: query
-          schema:
-            type: integer
-            default: 1
+          schema: { type: integer, default: 1 }
         - name: limit
           in: query
-          schema:
-            type: integer
-            default: 20
+          schema: { type: integer, default: 20 }
         - name: status
           in: query
-          schema:
-            type: string
+          schema: { type: string }
         - name: restaurantId
           in: query
-          schema:
-            type: integer
+          schema: { type: integer }
       responses:
         "200":
           description: Orders list
@@ -145,7 +182,6 @@ paths:
     post:
       operationId: createOrder
       tags: [orders]
-      summary: Create a new order
       requestBody:
         required: true
         content:
@@ -164,16 +200,14 @@ paths:
     get:
       operationId: getOrder
       tags: [orders]
-      summary: Get order by ID
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       responses:
         "200":
-          description: Order details
+          description: Order
           content:
             application/json:
               schema:
@@ -181,13 +215,11 @@ paths:
     patch:
       operationId: updateOrderStatus
       tags: [orders]
-      summary: Update order status
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       requestBody:
         required: true
         content:
@@ -204,13 +236,11 @@ paths:
     delete:
       operationId: deleteOrder
       tags: [orders]
-      summary: Delete an order
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       responses:
         "204":
           description: Deleted
@@ -219,22 +249,16 @@ paths:
     get:
       operationId: listCustomers
       tags: [customers]
-      summary: List all customers
       parameters:
         - name: page
           in: query
-          schema:
-            type: integer
-            default: 1
+          schema: { type: integer, default: 1 }
         - name: limit
           in: query
-          schema:
-            type: integer
-            default: 20
+          schema: { type: integer, default: 20 }
         - name: search
           in: query
-          schema:
-            type: string
+          schema: { type: string }
       responses:
         "200":
           description: Customers list
@@ -245,7 +269,6 @@ paths:
     post:
       operationId: createCustomer
       tags: [customers]
-      summary: Create a new customer
       requestBody:
         required: true
         content:
@@ -264,16 +287,14 @@ paths:
     get:
       operationId: getCustomer
       tags: [customers]
-      summary: Get customer by ID
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       responses:
         "200":
-          description: Customer details
+          description: Customer
           content:
             application/json:
               schema:
@@ -281,13 +302,11 @@ paths:
     patch:
       operationId: updateCustomer
       tags: [customers]
-      summary: Update customer
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       requestBody:
         required: true
         content:
@@ -304,13 +323,11 @@ paths:
     delete:
       operationId: deleteCustomer
       tags: [customers]
-      summary: Delete customer
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       responses:
         "204":
           description: Deleted
@@ -319,22 +336,16 @@ paths:
     get:
       operationId: listRestaurants
       tags: [restaurants]
-      summary: List all restaurants
       parameters:
         - name: page
           in: query
-          schema:
-            type: integer
-            default: 1
+          schema: { type: integer, default: 1 }
         - name: limit
           in: query
-          schema:
-            type: integer
-            default: 20
+          schema: { type: integer, default: 20 }
         - name: search
           in: query
-          schema:
-            type: string
+          schema: { type: string }
       responses:
         "200":
           description: Restaurants list
@@ -345,7 +356,6 @@ paths:
     post:
       operationId: createRestaurant
       tags: [restaurants]
-      summary: Create a new restaurant
       requestBody:
         required: true
         content:
@@ -364,16 +374,14 @@ paths:
     get:
       operationId: getRestaurant
       tags: [restaurants]
-      summary: Get restaurant by ID
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       responses:
         "200":
-          description: Restaurant details
+          description: Restaurant
           content:
             application/json:
               schema:
@@ -381,13 +389,11 @@ paths:
     patch:
       operationId: updateRestaurant
       tags: [restaurants]
-      summary: Update restaurant
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       requestBody:
         required: true
         content:
@@ -404,13 +410,11 @@ paths:
     delete:
       operationId: deleteRestaurant
       tags: [restaurants]
-      summary: Delete restaurant
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       responses:
         "204":
           description: Deleted
@@ -419,22 +423,16 @@ paths:
     get:
       operationId: listDrivers
       tags: [drivers]
-      summary: List all drivers
       parameters:
         - name: page
           in: query
-          schema:
-            type: integer
-            default: 1
+          schema: { type: integer, default: 1 }
         - name: limit
           in: query
-          schema:
-            type: integer
-            default: 20
+          schema: { type: integer, default: 20 }
         - name: status
           in: query
-          schema:
-            type: string
+          schema: { type: string }
       responses:
         "200":
           description: Drivers list
@@ -445,7 +443,6 @@ paths:
     post:
       operationId: createDriver
       tags: [drivers]
-      summary: Create a new driver
       requestBody:
         required: true
         content:
@@ -464,16 +461,14 @@ paths:
     get:
       operationId: getDriver
       tags: [drivers]
-      summary: Get driver by ID
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       responses:
         "200":
-          description: Driver details
+          description: Driver
           content:
             application/json:
               schema:
@@ -481,13 +476,11 @@ paths:
     patch:
       operationId: updateDriver
       tags: [drivers]
-      summary: Update driver
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       requestBody:
         required: true
         content:
@@ -504,13 +497,11 @@ paths:
     delete:
       operationId: deleteDriver
       tags: [drivers]
-      summary: Delete driver
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       responses:
         "204":
           description: Deleted
@@ -519,22 +510,16 @@ paths:
     get:
       operationId: listMenuItems
       tags: [menu-items]
-      summary: List all menu items
       parameters:
         - name: restaurantId
           in: query
-          schema:
-            type: integer
+          schema: { type: integer }
         - name: page
           in: query
-          schema:
-            type: integer
-            default: 1
+          schema: { type: integer, default: 1 }
         - name: limit
           in: query
-          schema:
-            type: integer
-            default: 20
+          schema: { type: integer, default: 20 }
       responses:
         "200":
           description: Menu items list
@@ -545,7 +530,6 @@ paths:
     post:
       operationId: createMenuItem
       tags: [menu-items]
-      summary: Create a new menu item
       requestBody:
         required: true
         content:
@@ -564,13 +548,11 @@ paths:
     patch:
       operationId: updateMenuItem
       tags: [menu-items]
-      summary: Update menu item
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       requestBody:
         required: true
         content:
@@ -587,13 +569,11 @@ paths:
     delete:
       operationId: deleteMenuItem
       tags: [menu-items]
-      summary: Delete menu item
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       responses:
         "204":
           description: Deleted
@@ -602,22 +582,16 @@ paths:
     get:
       operationId: listPayments
       tags: [payments]
-      summary: List all payments
       parameters:
         - name: page
           in: query
-          schema:
-            type: integer
-            default: 1
+          schema: { type: integer, default: 1 }
         - name: limit
           in: query
-          schema:
-            type: integer
-            default: 20
+          schema: { type: integer, default: 20 }
         - name: status
           in: query
-          schema:
-            type: string
+          schema: { type: string }
       responses:
         "200":
           description: Payments list
@@ -626,180 +600,308 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaymentListResponse"
 
+  /restaurant-requests:
+    get:
+      operationId: listRestaurantRequests
+      tags: [restaurant-requests]
+      summary: List restaurant registration requests (admin only)
+      parameters:
+        - name: status
+          in: query
+          schema: { type: string }
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20 }
+      responses:
+        "200":
+          description: Restaurant requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestaurantRequestListResponse"
+    post:
+      operationId: submitRestaurantRequest
+      tags: [restaurant-requests]
+      summary: Submit a new restaurant registration request (public)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRestaurantRequestBody"
+      responses:
+        "201":
+          description: Submitted request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestaurantRequest"
+
+  /restaurant-requests/{id}:
+    patch:
+      operationId: reviewRestaurantRequest
+      tags: [restaurant-requests]
+      summary: Approve or decline a restaurant request (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewRestaurantRequestBody"
+      responses:
+        "200":
+          description: Updated request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestaurantRequest"
+
+  /restaurant/profile:
+    get:
+      operationId: getRestaurantProfile
+      tags: [restaurant-portal]
+      summary: Get own restaurant profile
+      responses:
+        "200":
+          description: Restaurant profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Restaurant"
+
+  /restaurant/dashboard:
+    get:
+      operationId: getRestaurantDashboard
+      tags: [restaurant-portal]
+      summary: Get restaurant dashboard stats
+      responses:
+        "200":
+          description: Restaurant dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestaurantDashboardStats"
+
+  /restaurant/orders:
+    get:
+      operationId: listRestaurantOrders
+      tags: [restaurant-portal]
+      summary: List orders for own restaurant
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20 }
+        - name: status
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: Restaurant orders
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderListResponse"
+
+  /restaurant/customers:
+    get:
+      operationId: listRestaurantCustomers
+      tags: [restaurant-portal]
+      summary: List customers who ordered from own restaurant
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20 }
+      responses:
+        "200":
+          description: Restaurant customers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestaurantCustomerListResponse"
+
+  /restaurant/menu:
+    get:
+      operationId: listRestaurantMenu
+      tags: [restaurant-portal]
+      summary: List own restaurant menu items
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20 }
+      responses:
+        "200":
+          description: Restaurant menu
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MenuItemListResponse"
+
+  /restaurant/revenue-trend:
+    get:
+      operationId: getRestaurantRevenueTrend
+      tags: [restaurant-portal]
+      summary: Revenue trend for own restaurant (30 days)
+      responses:
+        "200":
+          description: Revenue trend
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RevenueTrendPoint"
+
 components:
   schemas:
     HealthStatus:
       type: object
       properties:
-        status:
+        status: { type: string }
+      required: [status]
+
+    LoginRequest:
+      type: object
+      properties:
+        email: { type: string }
+        password: { type: string }
+      required: [email, password]
+
+    AuthUser:
+      type: object
+      properties:
+        id: { type: integer }
+        email: { type: string }
+        role: { type: string }
+        restaurantId:
+          type: integer
+          nullable: true
+        restaurantName:
           type: string
-      required:
-        - status
+          nullable: true
+      required: [id, email, role]
+
+    AuthResponse:
+      type: object
+      properties:
+        token: { type: string }
+        user:
+          $ref: "#/components/schemas/AuthUser"
+      required: [token, user]
 
     DashboardStats:
       type: object
       properties:
-        totalRevenue:
+        totalRevenue: { type: number }
+        totalOrders: { type: integer }
+        totalCustomers: { type: integer }
+        totalRestaurants: { type: integer }
+        totalDrivers: { type: integer }
+        activeOrders: { type: integer }
+        avgOrderValue: { type: number }
+        revenueGrowth: { type: number }
+        ordersGrowth: { type: number }
+        customersGrowth: { type: number }
+      required: [totalRevenue, totalOrders, totalCustomers, totalRestaurants, totalDrivers, activeOrders, avgOrderValue, revenueGrowth, ordersGrowth, customersGrowth]
+
+    RestaurantDashboardStats:
+      type: object
+      properties:
+        totalRevenue: { type: number }
+        totalOrders: { type: integer }
+        totalCustomers: { type: integer }
+        totalMenuItems: { type: integer }
+        activeOrders: { type: integer }
+        avgOrderValue: { type: number }
+        rating:
           type: number
-        totalOrders:
-          type: integer
-        totalCustomers:
-          type: integer
-        totalRestaurants:
-          type: integer
-        totalDrivers:
-          type: integer
-        activeOrders:
-          type: integer
-        avgOrderValue:
-          type: number
-        revenueGrowth:
-          type: number
-        ordersGrowth:
-          type: number
-        customersGrowth:
-          type: number
-      required:
-        - totalRevenue
-        - totalOrders
-        - totalCustomers
-        - totalRestaurants
-        - totalDrivers
-        - activeOrders
-        - avgOrderValue
-        - revenueGrowth
-        - ordersGrowth
-        - customersGrowth
+          nullable: true
+        revenueGrowth: { type: number }
+        ordersGrowth: { type: number }
+      required: [totalRevenue, totalOrders, totalCustomers, totalMenuItems, activeOrders, avgOrderValue, revenueGrowth, ordersGrowth]
 
     RevenueTrendPoint:
       type: object
       properties:
-        date:
-          type: string
-        revenue:
-          type: number
-        orders:
-          type: integer
-      required:
-        - date
-        - revenue
-        - orders
+        date: { type: string }
+        revenue: { type: number }
+        orders: { type: integer }
+      required: [date, revenue, orders]
 
     StatusCount:
       type: object
       properties:
-        status:
-          type: string
-        count:
-          type: integer
-      required:
-        - status
-        - count
+        status: { type: string }
+        count: { type: integer }
+      required: [status, count]
 
     RestaurantRevenue:
       type: object
       properties:
-        id:
-          type: integer
-        name:
-          type: string
-        revenue:
-          type: number
-        orders:
-          type: integer
-      required:
-        - id
-        - name
-        - revenue
-        - orders
+        id: { type: integer }
+        name: { type: string }
+        revenue: { type: number }
+        orders: { type: integer }
+      required: [id, name, revenue, orders]
 
     HourlyOrders:
       type: object
       properties:
-        hour:
-          type: integer
-        orders:
-          type: integer
-      required:
-        - hour
-        - orders
+        hour: { type: integer }
+        orders: { type: integer }
+      required: [hour, orders]
 
     Order:
       type: object
       properties:
-        id:
-          type: integer
-        customerId:
-          type: integer
-        restaurantId:
-          type: integer
-        driverId:
-          type: integer
-          nullable: true
-        status:
-          type: string
-        totalAmount:
-          type: number
-        deliveryAddress:
-          type: string
-        notes:
-          type: string
-          nullable: true
-        createdAt:
-          type: string
-        updatedAt:
-          type: string
-        customerName:
-          type: string
-        restaurantName:
-          type: string
-        driverName:
-          type: string
-          nullable: true
-      required:
-        - id
-        - customerId
-        - restaurantId
-        - status
-        - totalAmount
-        - deliveryAddress
-        - createdAt
-        - updatedAt
-        - customerName
-        - restaurantName
+        id: { type: integer }
+        customerId: { type: integer }
+        restaurantId: { type: integer }
+        driverId: { type: integer, nullable: true }
+        status: { type: string }
+        totalAmount: { type: number }
+        deliveryAddress: { type: string }
+        notes: { type: string, nullable: true }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+        customerName: { type: string }
+        restaurantName: { type: string }
+        driverName: { type: string, nullable: true }
+      required: [id, customerId, restaurantId, status, totalAmount, deliveryAddress, createdAt, updatedAt, customerName, restaurantName]
 
     CreateOrderRequest:
       type: object
       properties:
-        customerId:
-          type: integer
-        restaurantId:
-          type: integer
-        driverId:
-          type: integer
-          nullable: true
-        totalAmount:
-          type: number
-        deliveryAddress:
-          type: string
-        notes:
-          type: string
-      required:
-        - customerId
-        - restaurantId
-        - totalAmount
-        - deliveryAddress
+        customerId: { type: integer }
+        restaurantId: { type: integer }
+        driverId: { type: integer, nullable: true }
+        totalAmount: { type: number }
+        deliveryAddress: { type: string }
+        notes: { type: string }
+      required: [customerId, restaurantId, totalAmount, deliveryAddress]
 
     UpdateOrderStatusRequest:
       type: object
       properties:
-        status:
-          type: string
-        driverId:
-          type: integer
-          nullable: true
-      required:
-        - status
+        status: { type: string }
+        driverId: { type: integer, nullable: true }
+      required: [status]
 
     OrderListResponse:
       type: object
@@ -808,73 +910,64 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Order"
-        total:
-          type: integer
-        page:
-          type: integer
-        limit:
-          type: integer
-      required:
-        - data
-        - total
-        - page
-        - limit
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+      required: [data, total, page, limit]
 
     Customer:
       type: object
       properties:
-        id:
-          type: integer
-        name:
-          type: string
-        email:
-          type: string
-        phone:
-          type: string
-          nullable: true
-        address:
-          type: string
-          nullable: true
-        totalOrders:
-          type: integer
-        totalSpent:
-          type: number
-        createdAt:
-          type: string
-      required:
-        - id
-        - name
-        - email
-        - totalOrders
-        - totalSpent
-        - createdAt
+        id: { type: integer }
+        name: { type: string }
+        email: { type: string }
+        phone: { type: string, nullable: true }
+        address: { type: string, nullable: true }
+        totalOrders: { type: integer }
+        totalSpent: { type: number }
+        createdAt: { type: string }
+      required: [id, name, email, totalOrders, totalSpent, createdAt]
+
+    RestaurantCustomer:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        email: { type: string }
+        phone: { type: string, nullable: true }
+        ordersFromRestaurant: { type: integer }
+        spentAtRestaurant: { type: number }
+        lastOrderAt: { type: string }
+      required: [id, name, email, ordersFromRestaurant, spentAtRestaurant, lastOrderAt]
+
+    RestaurantCustomerListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/RestaurantCustomer"
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+      required: [data, total, page, limit]
 
     CreateCustomerRequest:
       type: object
       properties:
-        name:
-          type: string
-        email:
-          type: string
-        phone:
-          type: string
-        address:
-          type: string
-      required:
-        - name
-        - email
+        name: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        address: { type: string }
+      required: [name, email]
 
     UpdateCustomerRequest:
       type: object
       properties:
-        name:
-          type: string
-        email:
-          type: string
-        phone:
-          type: string
-        address:
-          type: string
+        name: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        address: { type: string }
 
     CustomerListResponse:
       type: object
@@ -883,93 +976,48 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Customer"
-        total:
-          type: integer
-        page:
-          type: integer
-        limit:
-          type: integer
-      required:
-        - data
-        - total
-        - page
-        - limit
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+      required: [data, total, page, limit]
 
     Restaurant:
       type: object
       properties:
-        id:
-          type: integer
-        name:
-          type: string
-        cuisine:
-          type: string
-        address:
-          type: string
-        phone:
-          type: string
-          nullable: true
-        email:
-          type: string
-          nullable: true
-        isActive:
-          type: boolean
-        rating:
-          type: number
-          nullable: true
-        totalOrders:
-          type: integer
-        totalRevenue:
-          type: number
-        createdAt:
-          type: string
-      required:
-        - id
-        - name
-        - cuisine
-        - address
-        - isActive
-        - totalOrders
-        - totalRevenue
-        - createdAt
+        id: { type: integer }
+        name: { type: string }
+        cuisine: { type: string }
+        address: { type: string }
+        phone: { type: string, nullable: true }
+        email: { type: string, nullable: true }
+        isActive: { type: boolean }
+        rating: { type: number, nullable: true }
+        totalOrders: { type: integer }
+        totalRevenue: { type: number }
+        createdAt: { type: string }
+      required: [id, name, cuisine, address, isActive, totalOrders, totalRevenue, createdAt]
 
     CreateRestaurantRequest:
       type: object
       properties:
-        name:
-          type: string
-        cuisine:
-          type: string
-        address:
-          type: string
-        phone:
-          type: string
-        email:
-          type: string
-        rating:
-          type: number
-      required:
-        - name
-        - cuisine
-        - address
+        name: { type: string }
+        cuisine: { type: string }
+        address: { type: string }
+        phone: { type: string }
+        email: { type: string }
+        rating: { type: number }
+      required: [name, cuisine, address]
 
     UpdateRestaurantRequest:
       type: object
       properties:
-        name:
-          type: string
-        cuisine:
-          type: string
-        address:
-          type: string
-        phone:
-          type: string
-        email:
-          type: string
-        isActive:
-          type: boolean
-        rating:
-          type: number
+        name: { type: string }
+        cuisine: { type: string }
+        address: { type: string }
+        phone: { type: string }
+        email: { type: string }
+        isActive: { type: boolean }
+        rating: { type: number }
 
     RestaurantListResponse:
       type: object
@@ -978,92 +1026,48 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Restaurant"
-        total:
-          type: integer
-        page:
-          type: integer
-        limit:
-          type: integer
-      required:
-        - data
-        - total
-        - page
-        - limit
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+      required: [data, total, page, limit]
 
     Driver:
       type: object
       properties:
-        id:
-          type: integer
-        name:
-          type: string
-        email:
-          type: string
-        phone:
-          type: string
-          nullable: true
-        vehicle:
-          type: string
-          nullable: true
-        licensePlate:
-          type: string
-          nullable: true
-        status:
-          type: string
-        rating:
-          type: number
-          nullable: true
-        totalDeliveries:
-          type: integer
-        totalEarnings:
-          type: number
-        createdAt:
-          type: string
-      required:
-        - id
-        - name
-        - email
-        - status
-        - totalDeliveries
-        - totalEarnings
-        - createdAt
+        id: { type: integer }
+        name: { type: string }
+        email: { type: string }
+        phone: { type: string, nullable: true }
+        vehicle: { type: string, nullable: true }
+        licensePlate: { type: string, nullable: true }
+        status: { type: string }
+        rating: { type: number, nullable: true }
+        totalDeliveries: { type: integer }
+        totalEarnings: { type: number }
+        createdAt: { type: string }
+      required: [id, name, email, status, totalDeliveries, totalEarnings, createdAt]
 
     CreateDriverRequest:
       type: object
       properties:
-        name:
-          type: string
-        email:
-          type: string
-        phone:
-          type: string
-        vehicle:
-          type: string
-        licensePlate:
-          type: string
-        rating:
-          type: number
-      required:
-        - name
-        - email
+        name: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        vehicle: { type: string }
+        licensePlate: { type: string }
+        rating: { type: number }
+      required: [name, email]
 
     UpdateDriverRequest:
       type: object
       properties:
-        name:
-          type: string
-        email:
-          type: string
-        phone:
-          type: string
-        vehicle:
-          type: string
-        licensePlate:
-          type: string
-        status:
-          type: string
-        rating:
-          type: number
+        name: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        vehicle: { type: string }
+        licensePlate: { type: string }
+        status: { type: string }
+        rating: { type: number }
 
     DriverListResponse:
       type: object
@@ -1072,78 +1076,42 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Driver"
-        total:
-          type: integer
-        page:
-          type: integer
-        limit:
-          type: integer
-      required:
-        - data
-        - total
-        - page
-        - limit
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+      required: [data, total, page, limit]
 
     MenuItem:
       type: object
       properties:
-        id:
-          type: integer
-        restaurantId:
-          type: integer
-        name:
-          type: string
-        description:
-          type: string
-          nullable: true
-        price:
-          type: number
-        category:
-          type: string
-          nullable: true
-        isAvailable:
-          type: boolean
-        restaurantName:
-          type: string
-      required:
-        - id
-        - restaurantId
-        - name
-        - price
-        - isAvailable
-        - restaurantName
+        id: { type: integer }
+        restaurantId: { type: integer }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        price: { type: number }
+        category: { type: string, nullable: true }
+        isAvailable: { type: boolean }
+        restaurantName: { type: string }
+      required: [id, restaurantId, name, price, isAvailable, restaurantName]
 
     CreateMenuItemRequest:
       type: object
       properties:
-        restaurantId:
-          type: integer
-        name:
-          type: string
-        description:
-          type: string
-        price:
-          type: number
-        category:
-          type: string
-      required:
-        - restaurantId
-        - name
-        - price
+        restaurantId: { type: integer }
+        name: { type: string }
+        description: { type: string }
+        price: { type: number }
+        category: { type: string }
+      required: [restaurantId, name, price]
 
     UpdateMenuItemRequest:
       type: object
       properties:
-        name:
-          type: string
-        description:
-          type: string
-        price:
-          type: number
-        category:
-          type: string
-        isAvailable:
-          type: boolean
+        name: { type: string }
+        description: { type: string }
+        price: { type: number }
+        category: { type: string }
+        isAvailable: { type: boolean }
 
     MenuItemListResponse:
       type: object
@@ -1152,49 +1120,24 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/MenuItem"
-        total:
-          type: integer
-        page:
-          type: integer
-        limit:
-          type: integer
-      required:
-        - data
-        - total
-        - page
-        - limit
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+      required: [data, total, page, limit]
 
     Payment:
       type: object
       properties:
-        id:
-          type: integer
-        orderId:
-          type: integer
-        amount:
-          type: number
-        method:
-          type: string
-        status:
-          type: string
-        transactionId:
-          type: string
-          nullable: true
-        createdAt:
-          type: string
-        customerName:
-          type: string
-        restaurantName:
-          type: string
-      required:
-        - id
-        - orderId
-        - amount
-        - method
-        - status
-        - createdAt
-        - customerName
-        - restaurantName
+        id: { type: integer }
+        orderId: { type: integer }
+        amount: { type: number }
+        method: { type: string }
+        status: { type: string }
+        transactionId: { type: string, nullable: true }
+        createdAt: { type: string }
+        customerName: { type: string }
+        restaurantName: { type: string }
+      required: [id, orderId, amount, method, status, createdAt, customerName, restaurantName]
 
     PaymentListResponse:
       type: object
@@ -1203,14 +1146,56 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Payment"
-        total:
-          type: integer
-        page:
-          type: integer
-        limit:
-          type: integer
-      required:
-        - data
-        - total
-        - page
-        - limit
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+      required: [data, total, page, limit]
+
+    RestaurantRequest:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        cuisine: { type: string }
+        address: { type: string }
+        phone: { type: string, nullable: true }
+        email: { type: string }
+        description: { type: string, nullable: true }
+        ownerName: { type: string }
+        status: { type: string }
+        reviewerNotes: { type: string, nullable: true }
+        createdAt: { type: string }
+        reviewedAt: { type: string, nullable: true }
+      required: [id, name, cuisine, address, email, ownerName, status, createdAt]
+
+    CreateRestaurantRequestBody:
+      type: object
+      properties:
+        name: { type: string }
+        cuisine: { type: string }
+        address: { type: string }
+        phone: { type: string }
+        email: { type: string }
+        description: { type: string }
+        ownerName: { type: string }
+        password: { type: string }
+      required: [name, cuisine, address, email, ownerName, password]
+
+    ReviewRestaurantRequestBody:
+      type: object
+      properties:
+        status: { type: string }
+        reviewerNotes: { type: string }
+      required: [status]
+
+    RestaurantRequestListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/RestaurantRequest"
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+      required: [data, total, page, limit]
