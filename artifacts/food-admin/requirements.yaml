@@ -1,0 +1,20 @@
+packages:
+  "recharts": "Powerful, responsive chart library for the dashboard analytics"
+  "date-fns": "For formatting dates and times nicely across tables and charts"
+  "framer-motion": "For page transitions and micro-interactions"
+  "lucide-react": "For beautiful, consistent iconography across the admin panel"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility for merging tailwind classes without style conflicts"
+
+images:
+  - path: "artifacts/food-admin/public/images/logo.png"
+    description: "A minimal, modern geometric logo for a food delivery service. Neon cyan and deep purple on a transparent background, sleek and professional."
+    aspect_ratio: "1:1"
+  - path: "artifacts/food-admin/public/images/auth-bg.png"
+    description: "Abstract deep dark background with subtle neon glowing light leaks in cyan and violet, highly professional and modern."
+    aspect_ratio: "16:9"
+
+notes:
+  - The API uses React Query hooks exported from @workspace/api-client-react
+  - The UI is built with a mobile-first responsive design, but optimized for desktop admin usage
+  - A comprehensive dark-mode professional theme is applied globally
