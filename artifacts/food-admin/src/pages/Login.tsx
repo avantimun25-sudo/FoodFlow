@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { useLogin } from "@workspace/api-client-react";
+import { useLogin, useCustomerLogin } from "@workspace/api-client-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,14 +11,20 @@ export default function Login() {
   const { login } = useAuth();
   const [error, setError] = useState("");
 
-  const { mutate: doLogin, isPending } = useLogin();
+  const { mutate: doAdminLogin, isPending: isAdminPending } = useLogin();
+  const { mutate: doCustomerLogin, isPending: isCustomerPending } = useCustomerLogin();
+
+  const isPending = isAdminPending || isCustomerPending;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     const fd = new FormData(e.currentTarget);
-    doLogin(
-      { data: { email: fd.get("email") as string, password: fd.get("password") as string } },
+    const email = fd.get("email") as string;
+    const password = fd.get("password") as string;
+
+    doAdminLogin(
+      { data: { email, password } },
       {
         onSuccess: (data) => {
           login(data.token, data.user);
@@ -29,7 +35,19 @@ export default function Login() {
           }
         },
         onError: () => {
-          setError("Invalid email or password.");
+          doCustomerLogin(
+            { data: { email, password } },
+            {
+              onSuccess: (data) => {
+                localStorage.setItem("delivery_token", data.token);
+                localStorage.setItem("delivery_customer", JSON.stringify(data.customer));
+                window.location.href = "/delivery/";
+              },
+              onError: () => {
+                setError("Invalid email or password.");
+              },
+            }
+          );
         },
       }
     );
@@ -90,8 +108,8 @@ export default function Login() {
             </Button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-white/10 text-center">
-            <p className="text-sm text-muted-foreground mb-3">Are you a restaurant owner?</p>
+          <div className="mt-6 pt-6 border-t border-white/10 space-y-3">
+            <p className="text-sm text-muted-foreground text-center">New to the platform?</p>
             <Button
               variant="outline"
               className="w-full bg-transparent border-white/10 hover:bg-white/5 text-foreground"
@@ -99,6 +117,13 @@ export default function Login() {
             >
               <ChefHat className="w-4 h-4 mr-2" />
               Register Your Restaurant
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full text-muted-foreground hover:text-foreground hover:bg-white/5 text-sm"
+              onClick={() => { window.location.href = "/delivery/register"; }}
+            >
+              New customer? Create an account
             </Button>
           </div>
         </div>
