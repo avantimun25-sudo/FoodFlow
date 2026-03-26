@@ -713,6 +713,30 @@ paths:
               schema:
                 $ref: "#/components/schemas/OrderListResponse"
 
+  /restaurant/orders/{id}/status:
+    patch:
+      operationId: updateRestaurantOrderStatus
+      tags: [restaurant-portal]
+      summary: Update order status (restaurant only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateOrderStatusRequest"
+      responses:
+        "200":
+          description: Updated order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+
   /restaurant/customers:
     get:
       operationId: listRestaurantCustomers

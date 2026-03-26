@@ -148,6 +148,53 @@ router.get("/orders", async (req, res) => {
   }
 });
 
+router.patch("/orders/:id/status", async (req, res) => {
+  try {
+    const restaurantId = req.user!.restaurantId!;
+    const id = parseInt(req.params.id);
+    const { status } = req.body;
+
+    const VALID_STATUSES = ["confirmed", "preparing", "out_for_delivery", "delivered", "cancelled"];
+    if (!status || !VALID_STATUSES.includes(status)) {
+      res.status(400).json({ error: `Invalid status. Must be one of: ${VALID_STATUSES.join(", ")}` });
+      return;
+    }
+
+    const [existing] = await db.select({ id: ordersTable.id, restaurantId: ordersTable.restaurantId, status: ordersTable.status })
+      .from(ordersTable).where(eq(ordersTable.id, id)).limit(1);
+
+    if (!existing || existing.restaurantId !== restaurantId) {
+      res.status(404).json({ error: "Order not found" });
+      return;
+    }
+
+    if (existing.status === "delivered" || existing.status === "cancelled") {
+      res.status(400).json({ error: "Cannot update a completed or cancelled order" });
+      return;
+    }
+
+    const [updated] = await db.update(ordersTable)
+      .set({ status, updatedAt: new Date() })
+      .where(eq(ordersTable.id, id))
+      .returning();
+
+    const [customer] = await db.select({ name: customersTable.name }).from(customersTable).where(eq(customersTable.id, updated.customerId)).limit(1);
+    const [restaurant] = await db.select({ name: restaurantsTable.name }).from(restaurantsTable).where(eq(restaurantsTable.id, updated.restaurantId)).limit(1);
+
+    res.json({
+      ...updated,
+      totalAmount: Number(updated.totalAmount),
+      customerName: customer?.name ?? "",
+      restaurantName: restaurant?.name ?? "",
+      driverName: null,
+      items: [],
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 router.get("/customers", async (req, res) => {
   try {
     const restaurantId = req.user!.restaurantId!;

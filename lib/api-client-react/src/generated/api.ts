@@ -3327,6 +3327,94 @@ export function useListRestaurantOrders<
 }
 
 /**
+ * @summary Update order status (restaurant only)
+ */
+export const getUpdateRestaurantOrderStatusUrl = (id: number) => {
+  return `/api/restaurant/orders/${id}/status`;
+};
+
+export const updateRestaurantOrderStatus = async (
+  id: number,
+  updateOrderStatusRequest: UpdateOrderStatusRequest,
+  options?: RequestInit,
+): Promise<Order> => {
+  return customFetch<Order>(getUpdateRestaurantOrderStatusUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateOrderStatusRequest),
+  });
+};
+
+export const getUpdateRestaurantOrderStatusMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateRestaurantOrderStatus>>,
+    TError,
+    { id: number; data: BodyType<UpdateOrderStatusRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateRestaurantOrderStatus>>,
+  TError,
+  { id: number; data: BodyType<UpdateOrderStatusRequest> },
+  TContext
+> => {
+  const mutationKey = ["updateRestaurantOrderStatus"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateRestaurantOrderStatus>>,
+    { id: number; data: BodyType<UpdateOrderStatusRequest> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateRestaurantOrderStatus(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateRestaurantOrderStatusMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateRestaurantOrderStatus>>
+>;
+export type UpdateRestaurantOrderStatusMutationBody =
+  BodyType<UpdateOrderStatusRequest>;
+export type UpdateRestaurantOrderStatusMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Update order status (restaurant only)
+ */
+export const useUpdateRestaurantOrderStatus = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateRestaurantOrderStatus>>,
+    TError,
+    { id: number; data: BodyType<UpdateOrderStatusRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateRestaurantOrderStatus>>,
+  TError,
+  { id: number; data: BodyType<UpdateOrderStatusRequest> },
+  TContext
+> => {
+  return useMutation(getUpdateRestaurantOrderStatusMutationOptions(options));
+};
+
+/**
  * @summary List customers who ordered from own restaurant
  */
 export const getListRestaurantCustomersUrl = (

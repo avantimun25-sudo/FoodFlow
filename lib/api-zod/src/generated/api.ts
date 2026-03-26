@@ -691,6 +691,34 @@ export const ListRestaurantOrdersResponse = zod.object({
 });
 
 /**
+ * @summary Update order status (restaurant only)
+ */
+export const UpdateRestaurantOrderStatusParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateRestaurantOrderStatusBody = zod.object({
+  status: zod.string(),
+  driverId: zod.number().nullish(),
+});
+
+export const UpdateRestaurantOrderStatusResponse = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  restaurantId: zod.number(),
+  driverId: zod.number().nullish(),
+  status: zod.string(),
+  totalAmount: zod.number(),
+  deliveryAddress: zod.string(),
+  notes: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+  customerName: zod.string(),
+  restaurantName: zod.string(),
+  driverName: zod.string().nullish(),
+});
+
+/**
  * @summary List customers who ordered from own restaurant
  */
 export const listRestaurantCustomersQueryPageDefault = 1;
