@@ -26,6 +26,11 @@ router.post("/login", async (req, res) => {
       return;
     }
 
+    if (user.role === "customer") {
+      res.status(401).json({ error: "Invalid credentials" });
+      return;
+    }
+
     let restaurantName: string | null = null;
     if (user.restaurantId) {
       const [restaurant] = await db.select({ name: restaurantsTable.name }).from(restaurantsTable).where(eq(restaurantsTable.id, user.restaurantId)).limit(1);
