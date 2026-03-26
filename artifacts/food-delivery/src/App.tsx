@@ -1,4 +1,4 @@
-import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
+import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,20 +13,21 @@ import RestaurantDetail from "@/pages/restaurant";
 import Cart from "@/pages/cart";
 import Orders from "@/pages/orders";
 import OrderDetail from "@/pages/order-detail";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const queryClient = new QueryClient();
 
 // Higher order component for protected routes
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { isAuthenticated } = useAuth();
-  const [, setLocation] = useLocation();
+  const redirecting = useRef(false);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      setLocation("/login");
+    if (!isAuthenticated && !redirecting.current) {
+      redirecting.current = true;
+      window.location.replace("/delivery/login");
     }
-  }, [isAuthenticated, setLocation]);
+  }, [isAuthenticated]);
 
   if (!isAuthenticated) return null;
   return <Component />;
@@ -35,13 +36,14 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 // Redirect if already logged in
 function AuthRoute({ component: Component }: { component: React.ComponentType }) {
   const { isAuthenticated } = useAuth();
-  const [, setLocation] = useLocation();
+  const redirecting = useRef(false);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      setLocation("/");
+    if (isAuthenticated && !redirecting.current) {
+      redirecting.current = true;
+      window.location.replace("/delivery/");
     }
-  }, [isAuthenticated, setLocation]);
+  }, [isAuthenticated]);
 
   if (isAuthenticated) return null;
   return <Component />;

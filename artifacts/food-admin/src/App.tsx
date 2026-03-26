@@ -43,13 +43,19 @@ function AuthTokenSync() {
 }
 
 function AdminRoutes() {
-  const { user, isLoading, isAdmin } = useAuth();
+  const { user, isLoading, isAdmin, isRestaurant } = useAuth();
   const redirecting = useRef(false);
   useEffect(() => {
     if (isLoading || redirecting.current) return;
-    if (!user) { redirecting.current = true; window.location.href = "/delivery/login"; return; }
-    if (!isAdmin) { redirecting.current = true; window.location.href = "/restaurant/dashboard"; }
-  }, [isLoading, user, isAdmin]);
+    redirecting.current = true;
+    if (!user) { window.location.href = "/delivery/login"; return; }
+    if (isRestaurant) { window.location.href = "/restaurant/dashboard"; return; }
+    if (!isAdmin) {
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("auth_user");
+      window.location.href = "/delivery/login";
+    }
+  }, [isLoading, user, isAdmin, isRestaurant]);
   if (isLoading || !user || !isAdmin) return null;
 
   return (
@@ -70,13 +76,19 @@ function AdminRoutes() {
 }
 
 function RestaurantRoutes() {
-  const { user, isLoading, isRestaurant } = useAuth();
+  const { user, isLoading, isRestaurant, isAdmin } = useAuth();
   const redirecting = useRef(false);
   useEffect(() => {
     if (isLoading || redirecting.current) return;
-    if (!user) { redirecting.current = true; window.location.href = "/delivery/login"; return; }
-    if (!isRestaurant) { redirecting.current = true; window.location.href = "/"; }
-  }, [isLoading, user, isRestaurant]);
+    redirecting.current = true;
+    if (!user) { window.location.href = "/delivery/login"; return; }
+    if (isAdmin) { window.location.href = "/"; return; }
+    if (!isRestaurant) {
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("auth_user");
+      window.location.href = "/delivery/login";
+    }
+  }, [isLoading, user, isRestaurant, isAdmin]);
   if (isLoading || !user || !isRestaurant) return null;
 
   return (
