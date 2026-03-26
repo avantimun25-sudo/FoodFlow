@@ -34,7 +34,7 @@ export default function RestaurantLayout({ children }: RestaurantLayoutProps) {
 
   return (
     <div className="flex min-h-screen w-full overflow-hidden" style={{ background: "hsl(var(--background))" }}>
-      <aside className="w-72 hidden md:flex flex-col border-r border-orange-500/10 relative z-10"
+      <aside className="w-72 hidden md:flex flex-col border-r border-orange-500/10 relative z-10 h-screen sticky top-0 flex-shrink-0"
         style={{ background: "linear-gradient(180deg, hsl(20 14% 6%) 0%, hsl(20 10% 4%) 100%)" }}>
 
         <div className="h-20 flex items-center px-6 border-b border-orange-500/10">

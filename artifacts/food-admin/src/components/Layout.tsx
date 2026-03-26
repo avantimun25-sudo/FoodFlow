@@ -42,7 +42,7 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="flex min-h-screen w-full bg-background overflow-hidden selection:bg-primary/30">
-      <aside className="w-72 hidden md:flex flex-col border-r border-white/5 bg-card/50 backdrop-blur-xl relative z-10">
+      <aside className="w-72 hidden md:flex flex-col border-r border-white/5 bg-card/50 backdrop-blur-xl relative z-10 h-screen sticky top-0 flex-shrink-0">
         <div className="h-20 flex items-center px-8 border-b border-white/5">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20">
