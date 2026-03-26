@@ -7,6 +7,7 @@ import {
   menuItemsTable,
   ordersTable,
   paymentsTable,
+  restaurantRequestsTable,
 } from "@workspace/db";
 import bcrypt from "bcryptjs";
 import { eq, sql } from "drizzle-orm";
@@ -23,6 +24,7 @@ const RESTAURANTS = [
     email: "hello@burgerpalace.com",
     rating: "4.7",
     ownerEmail: "sarah@burgerpalace.com",
+    ownerName: "Sarah",
     ownerPassword: "burger2024",
     menu: [
       { name: "Classic Smash Burger", description: "Double smash patty, American cheese, pickles, special sauce", price: "13.99", category: "Burgers", imageUrl: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400" },
@@ -41,6 +43,7 @@ const RESTAURANTS = [
     email: "info@sakurasushi.com",
     rating: "4.9",
     ownerEmail: "kenji@sakurasushi.com",
+    ownerName: "Kenji",
     ownerPassword: "sushi2024",
     menu: [
       { name: "Dragon Roll", description: "Shrimp tempura, avocado, cucumber, topped with fresh tuna", price: "17.99", category: "Rolls", imageUrl: "https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=400" },
@@ -59,6 +62,7 @@ const RESTAURANTS = [
     email: "ciao@bellaitalia.com",
     rating: "4.6",
     ownerEmail: "marco@bellaitalia.com",
+    ownerName: "Marco",
     ownerPassword: "pizza2024",
     menu: [
       { name: "Margherita Pizza", description: "San Marzano tomatoes, fresh mozzarella, basil, olive oil", price: "14.99", category: "Pizza", imageUrl: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400" },
@@ -77,6 +81,7 @@ const RESTAURANTS = [
     email: "namaste@spicegarden.com",
     rating: "4.8",
     ownerEmail: "priya@spicegarden.com",
+    ownerName: "Priya",
     ownerPassword: "spice2024",
     menu: [
       { name: "Butter Chicken", description: "Tender chicken in rich tomato-butter sauce, served with naan", price: "16.99", category: "Mains", imageUrl: "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400" },
@@ -95,6 +100,7 @@ const RESTAURANTS = [
     email: "hola@tacofiesta.com",
     rating: "4.5",
     ownerEmail: "carlos@tacofiesta.com",
+    ownerName: "Carlos",
     ownerPassword: "taco2024",
     menu: [
       { name: "Al Pastor Tacos (3pc)", description: "Marinated pork, pineapple, cilantro, onion, salsa verde", price: "12.99", category: "Tacos", imageUrl: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400" },
@@ -203,6 +209,19 @@ async function main() {
         restaurantId: restaurant.id,
       });
     }
+
+    await db.insert(restaurantRequestsTable).values({
+      name: r.name,
+      cuisine: r.cuisine,
+      address: r.address,
+      phone: r.phone,
+      email: r.email,
+      description: `${r.cuisine} restaurant`,
+      ownerName: r.ownerName,
+      passwordHash,
+      status: "approved",
+      reviewedAt: new Date(),
+    });
 
     credLines.push(
       "",
