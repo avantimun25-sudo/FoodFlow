@@ -9,8 +9,6 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Layout from "./components/Layout";
 import RestaurantLayout from "./components/RestaurantLayout";
 
-import Login from "./pages/Login";
-
 import Dashboard from "./pages/Dashboard";
 import Orders from "./pages/Orders";
 import Customers from "./pages/Customers";
@@ -47,7 +45,7 @@ function AuthTokenSync() {
 function AdminRoutes() {
   const { user, isLoading, isAdmin } = useAuth();
   if (isLoading) return null;
-  if (!user) return <Redirect to="/login" />;
+  if (!user) { window.location.href = "/delivery/login"; return null; }
   if (!isAdmin) return <Redirect to="/restaurant/dashboard" />;
 
   return (
@@ -70,7 +68,7 @@ function AdminRoutes() {
 function RestaurantRoutes() {
   const { user, isLoading, isRestaurant } = useAuth();
   if (isLoading) return null;
-  if (!user) return <Redirect to="/login" />;
+  if (!user) { window.location.href = "/delivery/login"; return null; }
   if (!isRestaurant) return <Redirect to="/" />;
 
   return (
@@ -86,23 +84,9 @@ function RestaurantRoutes() {
   );
 }
 
-function PublicRoute({ component: Component }: { component: React.ComponentType }) {
-  const { user, isLoading } = useAuth();
-  if (isLoading) return null;
-  if (user) {
-    return user.role === "admin"
-      ? <Redirect to="/" />
-      : <Redirect to="/restaurant/dashboard" />;
-  }
-  return <Component />;
-}
-
 function Router() {
   return (
     <Switch>
-      <Route path="/login">
-        {() => <PublicRoute component={Login} />}
-      </Route>
       <Route path="/restaurant/:rest*">
         {() => <RestaurantRoutes />}
       </Route>
