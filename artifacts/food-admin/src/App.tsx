@@ -47,10 +47,18 @@ function AdminRoutes() {
   const redirecting = useRef(false);
   useEffect(() => {
     if (isLoading || redirecting.current) return;
-    redirecting.current = true;
-    if (!user) { window.location.href = "/delivery/login"; return; }
-    if (isRestaurant) { window.location.href = "/restaurant/dashboard"; return; }
+    if (!user) {
+      redirecting.current = true;
+      window.location.href = "/delivery/login";
+      return;
+    }
+    if (isRestaurant) {
+      redirecting.current = true;
+      window.location.href = "/restaurant/dashboard";
+      return;
+    }
     if (!isAdmin) {
+      redirecting.current = true;
       localStorage.removeItem("auth_token");
       localStorage.removeItem("auth_user");
       window.location.href = "/delivery/login";
@@ -80,10 +88,18 @@ function RestaurantRoutes() {
   const redirecting = useRef(false);
   useEffect(() => {
     if (isLoading || redirecting.current) return;
-    redirecting.current = true;
-    if (!user) { window.location.href = "/delivery/login"; return; }
-    if (isAdmin) { window.location.href = "/"; return; }
+    if (!user) {
+      redirecting.current = true;
+      window.location.href = "/delivery/login";
+      return;
+    }
+    if (isAdmin) {
+      redirecting.current = true;
+      window.location.href = "/";
+      return;
+    }
     if (!isRestaurant) {
+      redirecting.current = true;
       localStorage.removeItem("auth_token");
       localStorage.removeItem("auth_user");
       window.location.href = "/delivery/login";

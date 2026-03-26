@@ -233,17 +233,25 @@ async function main() {
   }
 
   // ── 3. Customers ──────────────────────────────────────────────────────────
+  const CUSTOMER_PASSWORD = "customer123";
+  const customerPasswordHash = await bcrypt.hash(CUSTOMER_PASSWORD, 10);
   const customerIds: number[] = [];
   for (const c of CUSTOMERS) {
     const existing = await db.select({ id: customersTable.id }).from(customersTable).where(eq(customersTable.email, c.email)).limit(1);
     if (existing.length > 0) {
       customerIds.push(existing[0].id);
+      // Ensure user record exists for login
+      const existingUser = await db.select({ id: usersTable.id }).from(usersTable).where(eq(usersTable.email, c.email)).limit(1);
+      if (existingUser.length === 0) {
+        await db.insert(usersTable).values({ email: c.email, passwordHash: customerPasswordHash, role: "customer", restaurantId: null });
+      }
     } else {
       const [customer] = await db.insert(customersTable).values(c).returning({ id: customersTable.id });
       customerIds.push(customer.id);
+      await db.insert(usersTable).values({ email: c.email, passwordHash: customerPasswordHash, role: "customer", restaurantId: null });
     }
   }
-  console.log(`  ✓ Customers: ${CUSTOMERS.length}`);
+  console.log(`  ✓ Customers: ${CUSTOMERS.length} (password: ${CUSTOMER_PASSWORD})`);
 
   // ── 4. Drivers ────────────────────────────────────────────────────────────
   const driverIds: number[] = [];
