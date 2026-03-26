@@ -3,6 +3,7 @@ export * from "./restaurants";
 export * from "./drivers";
 export * from "./menuItems";
 export * from "./orders";
+export * from "./orderItems";
 export * from "./payments";
 export * from "./users";
 export * from "./restaurantRequests";

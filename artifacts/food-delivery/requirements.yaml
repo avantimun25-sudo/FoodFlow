@@ -1,0 +1,18 @@
+packages:
+  "framer-motion": "For fluid page transitions and rich micro-interactions"
+  "lucide-react": "For beautiful UI icons"
+  "clsx": "For conditional class names"
+  "tailwind-merge": "For merging tailwind classes"
+images:
+  - path: "artifacts/food-delivery/public/images/hero-food.png"
+    description: "3d abstract vibrant illustration of floating delicious food items like burgers, pizza slices, and noodles on a bright coral orange background"
+    aspect_ratio: "16:9"
+  - path: "artifacts/food-delivery/public/images/empty-cart.png"
+    description: "3d cute sleek illustration of an empty shopping bag or basket with sad eyes, warm pastel colors"
+    aspect_ratio: "1:1"
+  - path: "artifacts/food-delivery/public/images/empty-orders.png"
+    description: "3d cute sleek illustration of a receipt or ticket floating playfully, warm pastel colors"
+    aspect_ratio: "1:1"
+notes:
+  - "App uses context for Auth and Cart state, persisting to localStorage"
+  - "Uses generated react-query hooks from @workspace/api-client-react"

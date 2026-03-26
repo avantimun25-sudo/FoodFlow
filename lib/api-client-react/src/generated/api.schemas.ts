@@ -352,6 +352,94 @@ export interface RestaurantRequestListResponse {
   limit: number;
 }
 
+export interface CustomerRegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+  address?: string;
+}
+
+export type CustomerAuthResponseCustomer = {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  address?: string | null;
+};
+
+export interface CustomerAuthResponse {
+  token: string;
+  customer: CustomerAuthResponseCustomer;
+}
+
+export interface DeliveryRestaurant {
+  id: number;
+  name: string;
+  cuisine: string;
+  address: string;
+  phone?: string | null;
+  rating?: number | null;
+  isActive: boolean;
+  totalOrders: number;
+}
+
+export interface DeliveryRestaurantList {
+  data: DeliveryRestaurant[];
+}
+
+export interface DeliveryMenuItem {
+  id: number;
+  name: string;
+  description?: string | null;
+  price: number;
+  category?: string | null;
+  imageUrl?: string | null;
+  isAvailable: boolean;
+}
+
+export interface DeliveryMenuResponse {
+  restaurant: DeliveryRestaurant;
+  items: DeliveryMenuItem[];
+}
+
+export type PlaceOrderRequestItemsItem = {
+  menuItemId: number;
+  quantity: number;
+  name: string;
+  price: number;
+};
+
+export interface PlaceOrderRequest {
+  restaurantId: number;
+  items: PlaceOrderRequestItemsItem[];
+  deliveryAddress: string;
+  notes?: string;
+}
+
+export interface DeliveryOrderItem {
+  menuItemId: number;
+  name: string;
+  quantity: number;
+  price: number;
+}
+
+export interface DeliveryOrder {
+  id: number;
+  restaurantId: number;
+  restaurantName: string;
+  status: string;
+  totalAmount: number;
+  deliveryAddress: string;
+  notes?: string | null;
+  items: DeliveryOrderItem[];
+  createdAt: string;
+}
+
+export interface DeliveryOrderList {
+  data: DeliveryOrder[];
+}
+
 export type Logout200 = {
   ok: boolean;
 };
@@ -413,4 +501,9 @@ export type ListRestaurantCustomersParams = {
 export type ListRestaurantMenuParams = {
   page?: number;
   limit?: number;
+};
+
+export type GetDeliveryRestaurantsParams = {
+  search?: string;
+  cuisine?: string;
 };

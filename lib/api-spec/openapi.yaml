@@ -821,6 +821,131 @@ paths:
                 items:
                   $ref: "#/components/schemas/RevenueTrendPoint"
 
+  # ─── Delivery (Customer) paths ──────────────────────────────────────────────
+  /delivery/register:
+    post:
+      operationId: customerRegister
+      tags: [delivery]
+      summary: Register as a customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerRegisterRequest"
+      responses:
+        "200":
+          description: Customer registered and authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerAuthResponse"
+
+  /delivery/login:
+    post:
+      operationId: customerLogin
+      tags: [delivery]
+      summary: Customer login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Auth token + customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerAuthResponse"
+
+  /delivery/restaurants:
+    get:
+      operationId: getDeliveryRestaurants
+      tags: [delivery]
+      summary: List active restaurants for delivery
+      parameters:
+        - in: query
+          name: search
+          schema: { type: string }
+        - in: query
+          name: cuisine
+          schema: { type: string }
+      responses:
+        "200":
+          description: Restaurant list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeliveryRestaurantList"
+
+  /delivery/restaurants/{id}/menu:
+    get:
+      operationId: getDeliveryRestaurantMenu
+      tags: [delivery]
+      summary: Get restaurant details and menu items
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Restaurant with menu
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeliveryMenuResponse"
+
+  /delivery/orders:
+    get:
+      operationId: getMyOrders
+      tags: [delivery]
+      summary: Get my orders (customer)
+      responses:
+        "200":
+          description: My orders
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeliveryOrderList"
+    post:
+      operationId: placeOrder
+      tags: [delivery]
+      summary: Place a new order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlaceOrderRequest"
+      responses:
+        "200":
+          description: Order placed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeliveryOrder"
+
+  /delivery/orders/{id}:
+    get:
+      operationId: getMyOrder
+      tags: [delivery]
+      summary: Get a specific order
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Order details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeliveryOrder"
+
 components:
   schemas:
     HealthStatus:
@@ -1275,3 +1400,127 @@ components:
         page: { type: integer }
         limit: { type: integer }
       required: [data, total, page, limit]
+
+    # ─── Delivery (Customer) schemas ─────────────────────────────────────────
+    CustomerRegisterRequest:
+      type: object
+      properties:
+        name: { type: string }
+        email: { type: string }
+        password: { type: string }
+        phone: { type: string }
+        address: { type: string }
+      required: [name, email, password]
+
+    CustomerAuthResponse:
+      type: object
+      properties:
+        token: { type: string }
+        customer:
+          type: object
+          properties:
+            id: { type: integer }
+            name: { type: string }
+            email: { type: string }
+            phone: { type: string, nullable: true }
+            address: { type: string, nullable: true }
+          required: [id, name, email]
+      required: [token, customer]
+
+    DeliveryRestaurant:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        cuisine: { type: string }
+        address: { type: string }
+        phone: { type: string, nullable: true }
+        rating: { type: number, nullable: true }
+        isActive: { type: boolean }
+        totalOrders: { type: integer }
+      required: [id, name, cuisine, address, isActive, totalOrders]
+
+    DeliveryRestaurantList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/DeliveryRestaurant"
+      required: [data]
+
+    DeliveryMenuItem:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        price: { type: number }
+        category: { type: string, nullable: true }
+        imageUrl: { type: string, nullable: true }
+        isAvailable: { type: boolean }
+      required: [id, name, price, isAvailable]
+
+    DeliveryMenuResponse:
+      type: object
+      properties:
+        restaurant:
+          $ref: "#/components/schemas/DeliveryRestaurant"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/DeliveryMenuItem"
+      required: [restaurant, items]
+
+    PlaceOrderRequest:
+      type: object
+      properties:
+        restaurantId: { type: integer }
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              menuItemId: { type: integer }
+              quantity: { type: integer }
+              name: { type: string }
+              price: { type: number }
+            required: [menuItemId, quantity, name, price]
+        deliveryAddress: { type: string }
+        notes: { type: string }
+      required: [restaurantId, items, deliveryAddress]
+
+    DeliveryOrderItem:
+      type: object
+      properties:
+        menuItemId: { type: integer }
+        name: { type: string }
+        quantity: { type: integer }
+        price: { type: number }
+      required: [menuItemId, name, quantity, price]
+
+    DeliveryOrder:
+      type: object
+      properties:
+        id: { type: integer }
+        restaurantId: { type: integer }
+        restaurantName: { type: string }
+        status: { type: string }
+        totalAmount: { type: number }
+        deliveryAddress: { type: string }
+        notes: { type: string, nullable: true }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/DeliveryOrderItem"
+        createdAt: { type: string }
+      required: [id, restaurantId, restaurantName, status, totalAmount, deliveryAddress, items, createdAt]
+
+    DeliveryOrderList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/DeliveryOrder"
+      required: [data]

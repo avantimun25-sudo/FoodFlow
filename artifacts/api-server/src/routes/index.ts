@@ -10,6 +10,7 @@ import paymentsRouter from "./payments";
 import authRouter from "./auth";
 import restaurantRequestsRouter from "./restaurantRequests";
 import restaurantPortalRouter from "./restaurantPortal";
+import deliveryRouter from "./delivery";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use("/menu-items", menuItemsRouter);
 router.use("/payments", paymentsRouter);
 router.use("/restaurant-requests", restaurantRequestsRouter);
 router.use("/restaurant", restaurantPortalRouter);
+router.use("/delivery", deliveryRouter);
 
 export default router;

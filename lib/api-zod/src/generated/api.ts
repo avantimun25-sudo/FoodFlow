@@ -805,3 +805,186 @@ export const GetRestaurantRevenueTrendResponseItem = zod.object({
 export const GetRestaurantRevenueTrendResponse = zod.array(
   GetRestaurantRevenueTrendResponseItem,
 );
+
+/**
+ * @summary Register as a customer
+ */
+export const CustomerRegisterBody = zod.object({
+  name: zod.string(),
+  email: zod.string(),
+  password: zod.string(),
+  phone: zod.string().optional(),
+  address: zod.string().optional(),
+});
+
+export const CustomerRegisterResponse = zod.object({
+  token: zod.string(),
+  customer: zod.object({
+    id: zod.number(),
+    name: zod.string(),
+    email: zod.string(),
+    phone: zod.string().nullish(),
+    address: zod.string().nullish(),
+  }),
+});
+
+/**
+ * @summary Customer login
+ */
+export const CustomerLoginBody = zod.object({
+  email: zod.string(),
+  password: zod.string(),
+});
+
+export const CustomerLoginResponse = zod.object({
+  token: zod.string(),
+  customer: zod.object({
+    id: zod.number(),
+    name: zod.string(),
+    email: zod.string(),
+    phone: zod.string().nullish(),
+    address: zod.string().nullish(),
+  }),
+});
+
+/**
+ * @summary List active restaurants for delivery
+ */
+export const GetDeliveryRestaurantsQueryParams = zod.object({
+  search: zod.coerce.string().optional(),
+  cuisine: zod.coerce.string().optional(),
+});
+
+export const GetDeliveryRestaurantsResponse = zod.object({
+  data: zod.array(
+    zod.object({
+      id: zod.number(),
+      name: zod.string(),
+      cuisine: zod.string(),
+      address: zod.string(),
+      phone: zod.string().nullish(),
+      rating: zod.number().nullish(),
+      isActive: zod.boolean(),
+      totalOrders: zod.number(),
+    }),
+  ),
+});
+
+/**
+ * @summary Get restaurant details and menu items
+ */
+export const GetDeliveryRestaurantMenuParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetDeliveryRestaurantMenuResponse = zod.object({
+  restaurant: zod.object({
+    id: zod.number(),
+    name: zod.string(),
+    cuisine: zod.string(),
+    address: zod.string(),
+    phone: zod.string().nullish(),
+    rating: zod.number().nullish(),
+    isActive: zod.boolean(),
+    totalOrders: zod.number(),
+  }),
+  items: zod.array(
+    zod.object({
+      id: zod.number(),
+      name: zod.string(),
+      description: zod.string().nullish(),
+      price: zod.number(),
+      category: zod.string().nullish(),
+      imageUrl: zod.string().nullish(),
+      isAvailable: zod.boolean(),
+    }),
+  ),
+});
+
+/**
+ * @summary Get my orders (customer)
+ */
+export const GetMyOrdersResponse = zod.object({
+  data: zod.array(
+    zod.object({
+      id: zod.number(),
+      restaurantId: zod.number(),
+      restaurantName: zod.string(),
+      status: zod.string(),
+      totalAmount: zod.number(),
+      deliveryAddress: zod.string(),
+      notes: zod.string().nullish(),
+      items: zod.array(
+        zod.object({
+          menuItemId: zod.number(),
+          name: zod.string(),
+          quantity: zod.number(),
+          price: zod.number(),
+        }),
+      ),
+      createdAt: zod.string(),
+    }),
+  ),
+});
+
+/**
+ * @summary Place a new order
+ */
+export const PlaceOrderBody = zod.object({
+  restaurantId: zod.number(),
+  items: zod.array(
+    zod.object({
+      menuItemId: zod.number(),
+      quantity: zod.number(),
+      name: zod.string(),
+      price: zod.number(),
+    }),
+  ),
+  deliveryAddress: zod.string(),
+  notes: zod.string().optional(),
+});
+
+export const PlaceOrderResponse = zod.object({
+  id: zod.number(),
+  restaurantId: zod.number(),
+  restaurantName: zod.string(),
+  status: zod.string(),
+  totalAmount: zod.number(),
+  deliveryAddress: zod.string(),
+  notes: zod.string().nullish(),
+  items: zod.array(
+    zod.object({
+      menuItemId: zod.number(),
+      name: zod.string(),
+      quantity: zod.number(),
+      price: zod.number(),
+    }),
+  ),
+  createdAt: zod.string(),
+});
+
+/**
+ * @summary Get a specific order
+ */
+export const GetMyOrderParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetMyOrderResponse = zod.object({
+  id: zod.number(),
+  restaurantId: zod.number(),
+  restaurantName: zod.string(),
+  status: zod.string(),
+  totalAmount: zod.number(),
+  deliveryAddress: zod.string(),
+  notes: zod.string().nullish(),
+  items: zod.array(
+    zod.object({
+      menuItemId: zod.number(),
+      name: zod.string(),
+      quantity: zod.number(),
+      price: zod.number(),
+    }),
+  ),
+  createdAt: zod.string(),
+});
