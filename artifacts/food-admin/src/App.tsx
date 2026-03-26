@@ -10,7 +10,6 @@ import Layout from "./components/Layout";
 import RestaurantLayout from "./components/RestaurantLayout";
 
 import Login from "./pages/Login";
-import RestaurantRegister from "./pages/RestaurantRegister";
 
 import Dashboard from "./pages/Dashboard";
 import Orders from "./pages/Orders";
@@ -109,9 +108,6 @@ function Router() {
     <Switch>
       <Route path="/login">
         {() => <PublicRoute component={Login} />}
-      </Route>
-      <Route path="/register">
-        {() => <PublicRoute component={RestaurantRegister} />}
       </Route>
       <Route path="/restaurant/:rest*">
         {() => <RestaurantRoutes />}

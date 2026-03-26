@@ -152,6 +152,13 @@ function daysAgo(n: number): Date {
 }
 
 async function main() {
+  // Guard: skip if data already exists
+  const existing = await db.select({ id: restaurantsTable.id }).from(restaurantsTable).limit(1);
+  if (existing.length > 0) {
+    console.log("✅ Fake data already seeded, skipping.");
+    process.exit(0);
+  }
+
   console.log("🌱 Seeding fake data...\n");
 
   // ── 1. Restaurants + portal users ────────────────────────────────────────

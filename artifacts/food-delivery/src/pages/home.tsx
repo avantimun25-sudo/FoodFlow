@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { useGetDeliveryRestaurants } from "@workspace/api-client-react";
 import { useAuth } from "@/hooks/use-auth";
@@ -15,13 +15,10 @@ export default function Home() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedCuisine, setSelectedCuisine] = useState("All");
 
-  // Basic debounce for search
-  import("react").then(({ useEffect }) => {
-    useEffect(() => {
-      const timer = setTimeout(() => setDebouncedSearch(search), 500);
-      return () => clearTimeout(timer);
-    }, [search]);
-  });
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 500);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const { data, isLoading, error } = useGetDeliveryRestaurants(
     { 
