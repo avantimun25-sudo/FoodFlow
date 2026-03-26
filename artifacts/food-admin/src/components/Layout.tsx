@@ -11,9 +11,12 @@ import {
   LogOut,
   Bell,
   ClipboardList,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface LayoutProps {
   children: ReactNode;
@@ -22,6 +25,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [location] = useLocation();
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const navItems = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -87,6 +91,15 @@ export default function Layout({ children }: LayoutProps) {
               <p className="text-sm font-semibold text-foreground truncate">Admin</p>
               <p className="text-xs text-muted-foreground truncate">{user?.email ?? ""}</p>
             </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:text-foreground"
+              onClick={toggleTheme}
+              title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </Button>
             <Button
               variant="ghost"
               size="icon"

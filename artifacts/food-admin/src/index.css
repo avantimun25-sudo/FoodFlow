@@ -59,46 +59,93 @@
   --radius-2xl: calc(var(--radius) + 8px);
 }
 
+/* Light mode */
 :root {
-  /* Enforcing Dark Mode as default for this professional admin panel */
-  --background: 233 47% 4%;     /* Very deep blue-black */
-  --foreground: 210 40% 98%;    /* Off-white */
-  
-  --card: 233 47% 7%;           /* Slightly lighter than bg */
+  --background: 220 20% 97%;
+  --foreground: 222 47% 11%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --card-border: 220 20% 88%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --popover-border: 220 20% 88%;
+
+  --primary: 191 80% 38%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 250 84% 60%;
+  --secondary-foreground: 0 0% 100%;
+
+  --muted: 220 20% 92%;
+  --muted-foreground: 215 16% 45%;
+
+  --accent: 220 20% 92%;
+  --accent-foreground: 222 47% 11%;
+
+  --destructive: 0 84% 58%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 220 20% 88%;
+  --input: 220 20% 88%;
+  --ring: 191 80% 38%;
+
+  --chart-1: 191 80% 38%;
+  --chart-2: 250 84% 60%;
+  --chart-3: 316 70% 50%;
+  --chart-4: 35 90% 55%;
+  --chart-5: 142 70% 40%;
+
+  --sidebar: 220 20% 95%;
+  --sidebar-foreground: 222 47% 11%;
+  --sidebar-border: 220 20% 88%;
+  --sidebar-primary: 191 80% 38%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 220 20% 92%;
+  --sidebar-accent-foreground: 222 47% 11%;
+
+  --radius: 1rem;
+}
+
+/* Dark mode */
+.dark {
+  --background: 233 47% 4%;
+  --foreground: 210 40% 98%;
+
+  --card: 233 47% 7%;
   --card-foreground: 210 40% 98%;
   --card-border: 233 30% 15%;
-  
+
   --popover: 233 47% 7%;
   --popover-foreground: 210 40% 98%;
   --popover-border: 233 30% 15%;
-  
-  /* Primary: Electric Cyan */
+
   --primary: 191 97% 55%;
   --primary-foreground: 233 47% 4%;
-  
-  /* Secondary: Deep Indigo/Purple */
+
   --secondary: 250 84% 66%;
   --secondary-foreground: 210 40% 98%;
-  
+
   --muted: 233 30% 15%;
   --muted-foreground: 215 20% 65%;
-  
+
   --accent: 233 30% 15%;
   --accent-foreground: 210 40% 98%;
-  
+
   --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
-  
+
   --border: 233 30% 15%;
   --input: 233 30% 15%;
   --ring: 191 97% 55%;
-  
-  --chart-1: 191 97% 55%; /* Cyan */
-  --chart-2: 250 84% 66%; /* Purple */
-  --chart-3: 316 70% 50%; /* Pink */
-  --chart-4: 35 90% 60%;  /* Orange */
-  --chart-5: 142 70% 45%; /* Green */
-  
+
+  --chart-1: 191 97% 55%;
+  --chart-2: 250 84% 66%;
+  --chart-3: 316 70% 50%;
+  --chart-4: 35 90% 60%;
+  --chart-5: 142 70% 45%;
+
   --sidebar: 233 47% 5%;
   --sidebar-foreground: 210 40% 98%;
   --sidebar-border: 233 30% 15%;
@@ -117,7 +164,6 @@
 
   html {
     @apply antialiased text-foreground bg-background;
-    color-scheme: dark;
   }
 
   body {

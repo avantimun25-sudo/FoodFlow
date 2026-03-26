@@ -8,9 +8,12 @@ import {
   LogOut,
   ChefHat,
   Star,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface RestaurantLayoutProps {
   children: ReactNode;
@@ -19,6 +22,7 @@ interface RestaurantLayoutProps {
 export default function RestaurantLayout({ children }: RestaurantLayoutProps) {
   const [location] = useLocation();
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const navItems = [
     { href: "/restaurant/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -89,6 +93,16 @@ export default function RestaurantLayout({ children }: RestaurantLayoutProps) {
               <p className="text-sm font-semibold text-white truncate">{restaurantName}</p>
               <p className="text-xs truncate" style={{ color: "rgba(255,255,255,0.4)" }}>{user?.email ?? ""}</p>
             </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hover:bg-orange-500/10"
+              style={{ color: "rgba(255,255,255,0.5)" }}
+              onClick={toggleTheme}
+              title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </Button>
             <Button
               variant="ghost"
               size="icon"
