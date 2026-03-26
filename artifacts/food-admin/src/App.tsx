@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Switch, Route, Router as WouterRouter, Redirect } from "wouter";
+import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -44,9 +44,13 @@ function AuthTokenSync() {
 
 function AdminRoutes() {
   const { user, isLoading, isAdmin } = useAuth();
-  if (isLoading) return null;
-  if (!user) { window.location.href = "/delivery/login"; return null; }
-  if (!isAdmin) return <Redirect to="/restaurant/dashboard" />;
+  const [, navigate] = useLocation();
+  useEffect(() => {
+    if (isLoading) return;
+    if (!user) { window.location.href = "/delivery/login"; return; }
+    if (!isAdmin) navigate("/restaurant/dashboard");
+  }, [isLoading, user, isAdmin, navigate]);
+  if (isLoading || !user || !isAdmin) return null;
 
   return (
     <Layout>
@@ -67,9 +71,13 @@ function AdminRoutes() {
 
 function RestaurantRoutes() {
   const { user, isLoading, isRestaurant } = useAuth();
-  if (isLoading) return null;
-  if (!user) { window.location.href = "/delivery/login"; return null; }
-  if (!isRestaurant) return <Redirect to="/" />;
+  const [, navigate] = useLocation();
+  useEffect(() => {
+    if (isLoading) return;
+    if (!user) { window.location.href = "/delivery/login"; return; }
+    if (!isRestaurant) navigate("/");
+  }, [isLoading, user, isRestaurant, navigate]);
+  if (isLoading || !user || !isRestaurant) return null;
 
   return (
     <RestaurantLayout>
