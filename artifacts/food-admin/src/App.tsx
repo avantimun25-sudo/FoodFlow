@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
+import { Switch, Route, Router as WouterRouter, Redirect } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -36,12 +36,6 @@ const queryClient = new QueryClient({
   },
 });
 
-function Navigate({ to }: { to: string }) {
-  const [, navigate] = useLocation();
-  useEffect(() => { navigate(to); }, [to]); // eslint-disable-line react-hooks/exhaustive-deps
-  return null;
-}
-
 function AuthTokenSync() {
   const { token } = useAuth();
   useEffect(() => {
@@ -53,8 +47,8 @@ function AuthTokenSync() {
 function AdminRoutes() {
   const { user, isLoading, isAdmin } = useAuth();
   if (isLoading) return null;
-  if (!user) return <Navigate to="/login" />;
-  if (!isAdmin) return <Navigate to="/restaurant/dashboard" />;
+  if (!user) return <Redirect to="/login" />;
+  if (!isAdmin) return <Redirect to="/restaurant/dashboard" />;
 
   return (
     <Layout>
@@ -76,8 +70,8 @@ function AdminRoutes() {
 function RestaurantRoutes() {
   const { user, isLoading, isRestaurant } = useAuth();
   if (isLoading) return null;
-  if (!user) return <Navigate to="/login" />;
-  if (!isRestaurant) return <Navigate to="/" />;
+  if (!user) return <Redirect to="/login" />;
+  if (!isRestaurant) return <Redirect to="/" />;
 
   return (
     <RestaurantLayout>
@@ -97,8 +91,8 @@ function PublicRoute({ component: Component }: { component: React.ComponentType 
   if (isLoading) return null;
   if (user) {
     return user.role === "admin"
-      ? <Navigate to="/" />
-      : <Navigate to="/restaurant/dashboard" />;
+      ? <Redirect to="/" />
+      : <Redirect to="/restaurant/dashboard" />;
   }
   return <Component />;
 }
