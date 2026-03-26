@@ -38,7 +38,7 @@ const queryClient = new QueryClient({
 
 function Navigate({ to }: { to: string }) {
   const [, navigate] = useLocation();
-  useEffect(() => { navigate(to); }, [to, navigate]);
+  useEffect(() => { navigate(to); }, [to]); // eslint-disable-line react-hooks/exhaustive-deps
   return null;
 }
 
