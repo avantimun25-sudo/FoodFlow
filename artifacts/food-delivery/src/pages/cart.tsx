@@ -12,7 +12,9 @@ import { motion } from "framer-motion";
 export default function Cart() {
   const { user, token } = useAuth();
   const { items, restaurantId, restaurantName, updateQuantity, clearCart, subtotal, totalItems } = useCart();
-  const placeOrderMutation = usePlaceOrder();
+  const placeOrderMutation = usePlaceOrder({
+    request: { headers: { Authorization: token ? `Bearer ${token}` : "" } },
+  });
   const { toast } = useToast();
   const [, setLocation] = useLocation();
 
@@ -43,7 +45,6 @@ export default function Cart() {
         }))
       }
     }, {
-      request: { headers: { Authorization: `Bearer ${token}` } },
       onSuccess: (data) => {
         clearCart();
         toast({ title: "Order Placed!", description: "Your food is on the way." });
