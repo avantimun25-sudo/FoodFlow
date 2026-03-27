@@ -14,6 +14,7 @@ import RestaurantDetail from "@/pages/restaurant";
 import Cart from "@/pages/cart";
 import Orders from "@/pages/orders";
 import OrderDetail from "@/pages/order-detail";
+import Profile from "@/pages/profile";
 import { useEffect, useRef } from "react";
 
 const queryClient = new QueryClient();
@@ -63,6 +64,7 @@ function Router() {
       <Route path="/cart"><ProtectedRoute component={Cart} /></Route>
       <Route path="/orders"><ProtectedRoute component={Orders} /></Route>
       <Route path="/orders/:id"><ProtectedRoute component={OrderDetail} /></Route>
+      <Route path="/profile"><ProtectedRoute component={Profile} /></Route>
       
       <Route component={NotFound} />
     </Switch>

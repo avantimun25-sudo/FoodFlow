@@ -7,6 +7,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (user: CustomerAuthResponseCustomer, token: string) => void;
   logout: () => void;
+  updateUser: (user: CustomerAuthResponseCustomer) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -47,10 +48,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("delivery_token");
   };
 
+  const updateUser = (updatedUser: CustomerAuthResponseCustomer) => {
+    setUser(updatedUser);
+    localStorage.setItem("delivery_customer", JSON.stringify(updatedUser));
+  };
+
   if (!isInitialized) return null;
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated: !!token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated: !!token, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

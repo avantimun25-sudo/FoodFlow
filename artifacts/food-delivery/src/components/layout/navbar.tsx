@@ -80,9 +80,11 @@ export function Navbar() {
               </button>
 
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                  {user?.name?.charAt(0).toUpperCase() || <User className="w-5 h-5" />}
-                </div>
+                <Link href="/profile">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold hover:bg-primary hover:text-white transition-colors cursor-pointer">
+                    {user?.name?.charAt(0).toUpperCase() || <User className="w-5 h-5" />}
+                  </div>
+                </Link>
                 <button onClick={handleLogout} className="text-sm font-medium text-muted-foreground hover:text-destructive transition-colors flex items-center gap-1">
                   <LogOut className="w-4 h-4" />
                   Logout
