@@ -37,7 +37,7 @@ export default function RestaurantLayout({ children }: RestaurantLayoutProps) {
   const pageTitle = navItems.find((i) => i.href === location)?.label ?? "Dashboard";
 
   return (
-    <div className="flex min-h-screen w-full overflow-hidden" style={{ background: "hsl(var(--background))" }}>
+    <div className="flex h-screen w-full overflow-hidden" style={{ background: "hsl(var(--background))" }}>
       <aside className="w-72 hidden md:flex flex-col border-r border-orange-500/10 relative z-10 h-screen sticky top-0 flex-shrink-0"
         style={{ background: "linear-gradient(180deg, hsl(20 14% 6%) 0%, hsl(20 10% 4%) 100%)" }}>
 
