@@ -71,8 +71,8 @@ export default function RestaurantOrders() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-3xl font-bold text-white">Orders</h1>
-        <p className="text-white/40 mt-1">Manage and update incoming orders</p>
+        <h1 className="text-3xl font-bold text-foreground">Orders</h1>
+        <p className="text-muted-foreground mt-1">Manage and update incoming orders</p>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -80,16 +80,11 @@ export default function RestaurantOrders() {
           <button
             key={f}
             onClick={() => { setStatusFilter(f); setPage(1); }}
-            className="px-4 py-2 rounded-xl text-sm font-medium transition-all capitalize"
-            style={statusFilter === f ? {
-              background: "rgba(249,115,22,0.2)",
-              color: "#f97316",
-              border: "1px solid rgba(249,115,22,0.3)",
-            } : {
-              background: "rgba(255,255,255,0.04)",
-              color: "rgba(255,255,255,0.5)",
-              border: "1px solid rgba(255,255,255,0.06)",
-            }}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all capitalize border ${
+              statusFilter === f
+                ? "bg-orange-500/20 text-orange-500 border-orange-500/30"
+                : "bg-muted/40 text-muted-foreground border-border hover:bg-muted hover:text-foreground"
+            }`}
           >
             {f === "out_for_delivery" ? "Out for Delivery" : f.charAt(0).toUpperCase() + f.slice(1)}
           </button>
@@ -98,15 +93,12 @@ export default function RestaurantOrders() {
 
       {isLoading ? (
         <div className="flex items-center justify-center h-48">
-          <Loader2 className="w-7 h-7 animate-spin" style={{ color: "#f97316" }} />
+          <Loader2 className="w-7 h-7 animate-spin text-orange-500" />
         </div>
       ) : !data?.data.length ? (
-        <div
-          className="rounded-2xl border p-16 text-center"
-          style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}
-        >
-          <ShoppingBag className="w-12 h-12 mx-auto mb-4 text-white/20" />
-          <p className="text-white/40">No orders found</p>
+        <div className="rounded-2xl border border-border bg-card p-16 text-center">
+          <ShoppingBag className="w-12 h-12 mx-auto mb-4 text-muted-foreground/40" />
+          <p className="text-muted-foreground">No orders found</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -120,8 +112,7 @@ export default function RestaurantOrders() {
             return (
               <div
                 key={order.id}
-                className="rounded-2xl border p-5 flex flex-col gap-4 transition-all"
-                style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}
+                className="rounded-2xl border border-border bg-card p-5 flex flex-col gap-4 transition-all"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div
@@ -133,8 +124,8 @@ export default function RestaurantOrders() {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <span className="font-bold text-white">#{order.id}</span>
-                      <span className="text-sm text-white/50">{order.customerName || "Customer"}</span>
+                      <span className="font-bold text-foreground">#{order.id}</span>
+                      <span className="text-sm text-muted-foreground">{order.customerName || "Customer"}</span>
                       <span
                         className="text-xs font-semibold px-2.5 py-0.5 rounded-full"
                         style={{ background: cfg.bg, color: cfg.color }}
@@ -143,31 +134,30 @@ export default function RestaurantOrders() {
                       </span>
                     </div>
                     {order.deliveryAddress && (
-                      <p className="text-sm text-white/40 truncate">{order.deliveryAddress}</p>
+                      <p className="text-sm text-muted-foreground truncate">{order.deliveryAddress}</p>
                     )}
                     {order.notes && (
-                      <p className="text-xs text-white/30 mt-1 italic">"{order.notes}"</p>
+                      <p className="text-xs text-muted-foreground/60 mt-1 italic">"{order.notes}"</p>
                     )}
                   </div>
 
                   <div className="text-right flex-shrink-0">
-                    <p className="text-lg font-bold" style={{ color: "#f97316" }}>
+                    <p className="text-lg font-bold text-orange-500">
                       ${Number(order.totalAmount).toFixed(2)}
                     </p>
-                    <p className="text-xs text-white/30 mt-0.5">
+                    <p className="text-xs text-muted-foreground mt-0.5">
                       {format(new Date(order.createdAt), "MMM d, h:mm a")}
                     </p>
                   </div>
                 </div>
 
                 {(next || canCancel) && (
-                  <div className="flex flex-wrap gap-2 pt-3 border-t border-white/5">
+                  <div className="flex flex-wrap gap-2 pt-3 border-t border-border">
                     {next && (
                       <button
                         onClick={() => handleStatusChange(order.id, next.status, next.label)}
                         disabled={isUpdating}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all disabled:opacity-50"
-                        style={{ background: "rgba(249,115,22,0.15)", color: "#f97316", border: "1px solid rgba(249,115,22,0.25)" }}
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 bg-orange-500/15 text-orange-500 border border-orange-500/25"
                       >
                         {isUpdating ? (
                           <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -181,8 +171,7 @@ export default function RestaurantOrders() {
                       <button
                         onClick={() => handleStatusChange(order.id, "cancelled", "Cancelled")}
                         disabled={isUpdating}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all disabled:opacity-50"
-                        style={{ background: "rgba(239,68,68,0.1)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.2)" }}
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 bg-red-500/10 text-red-500 border border-red-500/20"
                       >
                         <Ban className="w-3.5 h-3.5" />
                         Cancel
@@ -197,7 +186,7 @@ export default function RestaurantOrders() {
       )}
 
       {data && data.total > data.limit && (
-        <div className="flex justify-between items-center text-sm text-white/40">
+        <div className="flex justify-between items-center text-sm text-muted-foreground">
           <span>{data.total} total orders</span>
           <div className="flex gap-2">
             <Button
@@ -205,7 +194,6 @@ export default function RestaurantOrders() {
               size="sm"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="bg-transparent text-white/60 border-white/10 hover:bg-white/5"
             >
               Previous
             </Button>
@@ -214,7 +202,6 @@ export default function RestaurantOrders() {
               size="sm"
               onClick={() => setPage((p) => p + 1)}
               disabled={page * data.limit >= data.total}
-              className="bg-transparent text-white/60 border-white/10 hover:bg-white/5"
             >
               Next
             </Button>

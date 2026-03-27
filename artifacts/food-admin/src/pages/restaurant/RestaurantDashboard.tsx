@@ -24,33 +24,33 @@ function StatCard({
   growth?: number;
   color?: string;
 }) {
-  const colors: Record<string, { bg: string; icon: string; glow: string }> = {
-    orange: { bg: "rgba(249,115,22,0.12)", icon: "#f97316", glow: "rgba(249,115,22,0.2)" },
-    red: { bg: "rgba(239,68,68,0.12)", icon: "#ef4444", glow: "rgba(239,68,68,0.2)" },
-    blue: { bg: "rgba(59,130,246,0.12)", icon: "#3b82f6", glow: "rgba(59,130,246,0.2)" },
-    green: { bg: "rgba(34,197,94,0.12)", icon: "#22c55e", glow: "rgba(34,197,94,0.2)" },
-    purple: { bg: "rgba(168,85,247,0.12)", icon: "#a855f7", glow: "rgba(168,85,247,0.2)" },
-    yellow: { bg: "rgba(234,179,8,0.12)", icon: "#eab308", glow: "rgba(234,179,8,0.2)" },
+  const colors: Record<string, { bg: string; icon: string }> = {
+    orange: { bg: "rgba(249,115,22,0.12)", icon: "#f97316" },
+    red:    { bg: "rgba(239,68,68,0.12)",  icon: "#ef4444" },
+    blue:   { bg: "rgba(59,130,246,0.12)", icon: "#3b82f6" },
+    green:  { bg: "rgba(34,197,94,0.12)",  icon: "#22c55e" },
+    purple: { bg: "rgba(168,85,247,0.12)", icon: "#a855f7" },
+    yellow: { bg: "rgba(234,179,8,0.12)",  icon: "#eab308" },
   };
   const c = colors[color] ?? colors.orange;
 
   return (
-    <Card className="border-0 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.06)" }}>
-      <div className="absolute inset-0 border rounded-xl" style={{ borderColor: "rgba(249,115,22,0.08)" }} />
+    <Card className="relative overflow-hidden border-border bg-card">
+      <div className="absolute inset-0 border rounded-xl border-orange-500/8" />
       <CardContent className="p-5">
         <div className="flex items-start justify-between mb-4">
           <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: c.bg }}>
             <Icon className="w-5 h-5" style={{ color: c.icon }} />
           </div>
           {growth !== undefined && (
-            <div className={`flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full ${growth >= 0 ? "text-green-400 bg-green-500/10" : "text-red-400 bg-red-500/10"}`}>
+            <div className={`flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full ${growth >= 0 ? "text-green-500 bg-green-500/10" : "text-red-500 bg-red-500/10"}`}>
               {growth >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
               {Math.abs(growth).toFixed(1)}%
             </div>
           )}
         </div>
-        <p className="text-2xl font-bold text-white mb-1">{value}</p>
-        <p className="text-sm text-white/50">{label}</p>
+        <p className="text-2xl font-bold text-foreground mb-1">{value}</p>
+        <p className="text-sm text-muted-foreground">{label}</p>
         {sub && <p className="text-xs mt-1" style={{ color: c.icon }}>{sub}</p>}
       </CardContent>
     </Card>
@@ -60,10 +60,10 @@ function StatCard({
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-xl border px-4 py-3 text-sm" style={{ background: "rgba(20,15,10,0.95)", borderColor: "rgba(249,115,22,0.2)" }}>
-      <p className="text-white/60 mb-1">{label}</p>
-      <p className="text-orange-400 font-bold">${Number(payload[0]?.value ?? 0).toFixed(2)}</p>
-      {payload[1] && <p className="text-white/60 text-xs">{payload[1].value} orders</p>}
+    <div className="rounded-xl border border-border bg-card px-4 py-3 text-sm shadow-lg">
+      <p className="text-muted-foreground mb-1">{label}</p>
+      <p className="text-orange-500 font-bold">${Number(payload[0]?.value ?? 0).toFixed(2)}</p>
+      {payload[1] && <p className="text-muted-foreground text-xs">{payload[1].value} orders</p>}
     </div>
   );
 };
@@ -89,8 +89,8 @@ export default function RestaurantDashboard() {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-        <p className="text-white/40 mt-1">Your restaurant at a glance</p>
+        <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+        <p className="text-muted-foreground mt-1">Your restaurant at a glance</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -149,28 +149,27 @@ export default function RestaurantDashboard() {
         )}
       </div>
 
-      <div className="rounded-2xl border p-6" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(249,115,22,0.1)" }}>
+      <div className="rounded-2xl border border-orange-500/10 bg-card p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="font-bold text-white text-lg">Revenue Trend</h3>
-            <p className="text-sm text-white/40">Last 30 days</p>
+            <h3 className="font-bold text-foreground text-lg">Revenue Trend</h3>
+            <p className="text-sm text-muted-foreground">Last 30 days</p>
           </div>
-          <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full"
-            style={{ background: "rgba(249,115,22,0.1)", color: "#f97316" }}>
+          <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-orange-500/10 text-orange-500">
             <Clock className="w-3.5 h-3.5" />
             Daily
           </div>
         </div>
         {chartData.length === 0 ? (
-          <div className="h-48 flex items-center justify-center text-white/30 text-sm">
+          <div className="h-48 flex items-center justify-center text-muted-foreground text-sm">
             No revenue data yet. Start receiving orders!
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-              <XAxis dataKey="date" tick={{ fill: "rgba(255,255,255,0.35)", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: "rgba(255,255,255,0.35)", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${v}`} />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+              <XAxis dataKey="date" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${v}`} />
               <Tooltip content={<CustomTooltip />} />
               <Line
                 type="monotone"

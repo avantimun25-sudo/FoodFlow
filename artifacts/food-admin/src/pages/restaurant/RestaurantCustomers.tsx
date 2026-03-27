@@ -12,18 +12,18 @@ export default function RestaurantCustomers() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-3xl font-bold text-white">Customers</h1>
-        <p className="text-white/40 mt-1">People who ordered from your restaurant</p>
+        <h1 className="text-3xl font-bold text-foreground">Customers</h1>
+        <p className="text-muted-foreground mt-1">People who ordered from your restaurant</p>
       </div>
 
       {isLoading ? (
         <div className="flex items-center justify-center h-48">
-          <Loader2 className="w-7 h-7 animate-spin" style={{ color: "#f97316" }} />
+          <Loader2 className="w-7 h-7 animate-spin text-orange-500" />
         </div>
       ) : !data?.data.length ? (
-        <div className="rounded-2xl border p-16 text-center" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}>
-          <Users className="w-12 h-12 mx-auto mb-4 text-white/20" />
-          <p className="text-white/40">No customers yet. Orders will show your customers here.</p>
+        <div className="rounded-2xl border border-border bg-card p-16 text-center">
+          <Users className="w-12 h-12 mx-auto mb-4 text-muted-foreground/40" />
+          <p className="text-muted-foreground">No customers yet. Orders will show your customers here.</p>
         </div>
       ) : (
         <>
@@ -33,8 +33,7 @@ export default function RestaurantCustomers() {
               return (
                 <div
                   key={customer.id}
-                  className="rounded-2xl border p-5 transition-all hover:border-orange-500/20"
-                  style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}
+                  className="rounded-2xl border border-border bg-card p-5 transition-all hover:border-orange-500/20"
                 >
                   <div className="flex items-start gap-4 mb-4">
                     <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white flex-shrink-0"
@@ -42,15 +41,15 @@ export default function RestaurantCustomers() {
                       {initials}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-bold text-white truncate">{customer.name}</p>
+                      <p className="font-bold text-foreground truncate">{customer.name}</p>
                       {customer.email && (
-                        <p className="text-xs text-white/40 flex items-center gap-1.5 mt-0.5 truncate">
+                        <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5 truncate">
                           <Mail className="w-3 h-3 flex-shrink-0" />
                           {customer.email}
                         </p>
                       )}
                       {customer.phone && (
-                        <p className="text-xs text-white/40 flex items-center gap-1.5 mt-0.5">
+                        <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
                           <Phone className="w-3 h-3 flex-shrink-0" />
                           {customer.phone}
                         </p>
@@ -59,26 +58,26 @@ export default function RestaurantCustomers() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="rounded-xl p-3" style={{ background: "rgba(249,115,22,0.08)" }}>
+                    <div className="rounded-xl p-3 bg-orange-500/8">
                       <div className="flex items-center gap-1.5 mb-1">
-                        <ShoppingBag className="w-3.5 h-3.5" style={{ color: "#f97316" }} />
-                        <span className="text-xs text-white/40">Orders</span>
+                        <ShoppingBag className="w-3.5 h-3.5 text-orange-500" />
+                        <span className="text-xs text-muted-foreground">Orders</span>
                       </div>
-                      <p className="font-bold text-white">{Number(customer.ordersFromRestaurant)}</p>
+                      <p className="font-bold text-foreground">{Number(customer.ordersFromRestaurant)}</p>
                     </div>
-                    <div className="rounded-xl p-3" style={{ background: "rgba(34,197,94,0.08)" }}>
+                    <div className="rounded-xl p-3 bg-green-500/8">
                       <div className="flex items-center gap-1.5 mb-1">
-                        <DollarSign className="w-3.5 h-3.5 text-green-400" />
-                        <span className="text-xs text-white/40">Spent</span>
+                        <DollarSign className="w-3.5 h-3.5 text-green-500" />
+                        <span className="text-xs text-muted-foreground">Spent</span>
                       </div>
-                      <p className="font-bold text-white">
+                      <p className="font-bold text-foreground">
                         ${Number(customer.spentAtRestaurant).toFixed(2)}
                       </p>
                     </div>
                   </div>
 
                   {customer.lastOrderAt && (
-                    <p className="text-xs text-white/25 mt-3">
+                    <p className="text-xs text-muted-foreground/60 mt-3">
                       Last order {format(new Date(customer.lastOrderAt), "MMM d, yyyy")}
                     </p>
                   )}
@@ -88,7 +87,7 @@ export default function RestaurantCustomers() {
           </div>
 
           {data.total > data.limit && (
-            <div className="flex justify-between items-center text-sm text-white/40">
+            <div className="flex justify-between items-center text-sm text-muted-foreground">
               <span>{data.total} total customers</span>
               <div className="flex gap-2">
                 <Button
@@ -96,7 +95,6 @@ export default function RestaurantCustomers() {
                   size="sm"
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="bg-transparent text-white/60 border-white/10 hover:bg-white/5"
                 >
                   Previous
                 </Button>
@@ -105,7 +103,6 @@ export default function RestaurantCustomers() {
                   size="sm"
                   onClick={() => setPage((p) => p + 1)}
                   disabled={page * data.limit >= data.total}
-                  className="bg-transparent text-white/60 border-white/10 hover:bg-white/5"
                 >
                   Next
                 </Button>
